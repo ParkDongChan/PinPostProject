@@ -119,5 +119,6 @@ const styles = StyleSheet.create({
 //      </View>
 //    </ScrollView>
 //  </SafeAreaView>
+// 테스트
 
 export default App;
