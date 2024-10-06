@@ -1,4 +1,12 @@
 {
   "name": "PinPostProject",
-  "displayName": "PinPostProject"
+  "displayName": "PinPostProject",
+  "extra": {
+    "eas": {
+      "projectId": "d9c65c6c-0497-49a5-8648-ad167cc1aa77"
+    }
+  },
+  "plugins": [
+    "expo-build-properties"
+  ]
 }
