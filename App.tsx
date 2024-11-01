@@ -6,7 +6,7 @@
  */
 
 import { NaverMapView } from '@mj-studio/react-native-naver-map';
-import React from 'react';
+import React, { useState } from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -14,6 +14,8 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
+  TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
@@ -58,6 +60,7 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -65,10 +68,86 @@ function App(): React.JSX.Element {
 
   return (
     <View style={{flex: 1}}>
-      <NaverMapView style={{flex: 1}} />
+      {isLoggedIn ? (
+        <NaverMapView style={{ flex: 1 }} />
+      ) : (
+        <LoginScreen onLogin={() => setIsLoggedIn(true)} />
+      )}
+    </View>
+  );
+  //return (
+  //  <View style={{flex: 1}}>
+  //    <NaverMapView style={{flex: 1}} />
+  //  </View>
+  //);
+}
+
+function LoginScreen({ onLogin }: { onLogin: () => void }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  return (
+    <View style={stylesLogin.loginContainer}>
+      <Text style={stylesLogin.title}>로그인</Text>
+      <TextInput
+        style={stylesLogin.input}
+        placeholder="아이디"
+        value={username}
+        onChangeText={setUsername}
+      />
+      <TextInput
+        style={stylesLogin.input}
+        placeholder="비밀번호"
+        value={password}
+        secureTextEntry
+        onChangeText={setPassword}
+      />
+      <TouchableOpacity style={stylesLogin.button} onPress={onLogin}>
+        <Text style={stylesLogin.buttonText}>로그인</Text>
+      </TouchableOpacity>
     </View>
   );
 }
+
+const stylesLogin = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  loginContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  input: {
+    width: '100%',
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    marginVertical: 10,
+    borderRadius: 5,
+  },
+  button: {
+    width: '100%',
+    height: 40,
+    backgroundColor: '#1E90FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
 
 const styles = StyleSheet.create({
   sectionContainer: {
