@@ -12,7 +12,20 @@
           "package_name": "com.pinpostproject"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "215594584032-pepmdvcrb7iq9nlnt8abt4qf0h6u0gtn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pinpostproject",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "215594584032-mj6lq9omiq8dm80ustqqanmoe45iljsp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAQNLAxwvNaIH1mz2-q9wSZ2QgdGTmyS1o"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "215594584032-mj6lq9omiq8dm80ustqqanmoe45iljsp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
