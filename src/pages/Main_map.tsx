@@ -10,6 +10,7 @@ import React, {useState, useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   AppState,
+  Image,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -60,12 +61,27 @@ function Section({children, title}: SectionProps): React.JSX.Element {
   );
 }
 
-function Main_map(): React.JSX.Element {
+function Main_map({navigation}: Props): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+
+  const initialLocation = {
+    latitude: 37.291175,
+    longitude: 126.968310,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+  };
 
   return (
     <View style={{flex: 1}}>
-      <NaverMapView style={{flex: 1}} />
+      <TouchableOpacity onPress={() => navigation.goBack()} style={{ position: 'absolute', top: 20, left: 20, zIndex: 1 }}>
+        <Image source={require('../components/BackPage.jpg')} style={styles.back_logo} />
+      </TouchableOpacity>
+      <NaverMapView
+        style={{flex: 1}}
+        initialRegion={{
+          ...initialLocation,
+        }}
+      />
     </View>
   );
 }
@@ -74,6 +90,11 @@ const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,
+  },
+  back_logo: {
+    width: 20,
+    height: 20,
+    resizeMode: 'contain',
   },
   sectionTitle: {
     fontSize: 24,
