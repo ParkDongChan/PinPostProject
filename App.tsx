@@ -35,6 +35,7 @@ import Login from './src/pages/Login';
 import Main_map from './src/pages/Main_map';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import SignUp from './src/pages/SignUp';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -105,6 +106,7 @@ function App(): React.JSX.Element {
       <Stack.Navigator>
         <Stack.Screen name="Landing" options={{headerShown: false}} component={Login} />
         <Stack.Screen name="Main" options={{headerShown: false}} component={Main_map} />
+        <Stack.Screen name="SignUp" options={{headerShown: false}} component={SignUp} />
       </Stack.Navigator>
     </NavigationContainer>
   );
