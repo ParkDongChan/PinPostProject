@@ -31,7 +31,10 @@ import {
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
-import LoginScreen from './LoginScreen';
+import Login from './src/pages/Login';
+import Main_map from './src/pages/Main_map';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -67,6 +70,8 @@ function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const [user, setUser] = useState();
 
+  const Stack = createNativeStackNavigator<NavParamList>();
+
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
@@ -96,10 +101,19 @@ function App(): React.JSX.Element {
   //************************************************************/ //
 
   return (
-    <View style={{flex: 1}}>
-      {user ? <NaverMapView style={{flex: 1}} /> : <LoginScreen />}
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Landing" options={{headerShown: false}} component={Login} />
+        <Stack.Screen name="Main" options={{headerShown: false}} component={Main_map} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
+
+  //return (
+  //  <View style={{flex: 1}}>
+  //    {user ? <NaverMapView style={{flex: 1}} /> : <LoginScreen />}
+  //  </View>
+  //);
   //return (
   //  <View style={{flex: 1}}>
   //    <NaverMapView style={{flex: 1}} />

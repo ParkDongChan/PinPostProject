@@ -59,7 +59,7 @@ const stylesLogin = StyleSheet.create({
   },
 });
 
-function LoginScreen() {
+function Login({navigation}: Props) {
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
@@ -118,8 +118,11 @@ function LoginScreen() {
         color={GoogleSigninButton.Color.Dark}
         onPress={GoogleLogin}
       />
+      <TouchableOpacity onPress={() => navigation.navigate('Main')}>
+        <Text>클릭 테스트 (네이버 맵으로 이동)</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
-export default LoginScreen;
+export default Login;
