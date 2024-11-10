@@ -83,7 +83,7 @@ function App(): React.JSX.Element {
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
+    return subscriber; 
   }, []);
 
   //*************앱 켤때마다 로그아웃 시켜서 로그인 테스트용************///

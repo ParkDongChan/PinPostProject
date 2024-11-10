@@ -21,7 +21,7 @@ import {
   View,
 } from 'react-native';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
 const stylesLogin = StyleSheet.create({
   loginContainer: {
@@ -79,7 +79,6 @@ const stylesLogin = StyleSheet.create({
 });
 
 function SignUp({navigation}: Props) {
-
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -88,9 +87,17 @@ function SignUp({navigation}: Props) {
 
   return (
     <View style={stylesLogin.loginContainer}>
-      <TouchableOpacity style={stylesLogin.Top} onPress={() => navigation.goBack()}>
-        <Image source={require('../components/BackPage.jpg')} style={[stylesLogin.back_logo]} />
-        <Image source={require('../components/PinPostLogo.jpg')} style={[stylesLogin.logo]} />
+      <TouchableOpacity
+        style={stylesLogin.Top}
+        onPress={() => navigation.goBack()}>
+        <Image
+          source={require('../components/BackPage.jpg')}
+          style={[stylesLogin.back_logo]}
+        />
+        <Image
+          source={require('../components/PinPostLogo.jpg')}
+          style={[stylesLogin.logo]}
+        />
       </TouchableOpacity>
       <View style={stylesLogin.inputContainer}>
         <TextInput
@@ -127,7 +134,9 @@ function SignUp({navigation}: Props) {
           onChangeText={setNickname}
         />
       </View>
-      <TouchableOpacity style={stylesLogin.signUpButton} onPress={() => console.log('가입하기')}>
+      <TouchableOpacity
+        style={stylesLogin.signUpButton}
+        onPress={() => console.log('가입하기')}>
         <Text style={stylesLogin.signUpButtonText}>가입하기</Text>
       </TouchableOpacity>
     </View>

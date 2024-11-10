@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import auth from '@react-native-firebase/auth';
+import db from '@react-native-firebase/firestore';
 import {
   GoogleSignin,
   statusCodes,
@@ -21,7 +22,7 @@ import {
   View,
 } from 'react-native';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
 const stylesLogin = StyleSheet.create({
   container: {
@@ -29,7 +30,7 @@ const stylesLogin = StyleSheet.create({
   },
   logo: {
     width: screenWidth - 120,
-    marginTop: screenHeight * 10 / 100,
+    marginTop: (screenHeight * 10) / 100,
     height: 100,
     resizeMode: 'contain',
   },
@@ -40,7 +41,7 @@ const stylesLogin = StyleSheet.create({
     backgroundColor: '#fff',
   },
   title: {
-    marginTop: screenHeight * 20 / 100,
+    marginTop: (screenHeight * 20) / 100,
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 20,
@@ -84,52 +85,63 @@ function Login({navigation}: Props) {
     });
   }, []);
 
+  const isNewUser = async (uid: string): Promise<boolean> => {
+    try {
+      const userDoc = await db().collection('users').doc(uid).get();
+      return userDoc.exists;
+    } catch (error) {
+      console.error(error);
+    }
+    return true;
+  };
+
   const GoogleLogin = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       const response = await GoogleSignin.signIn();
       if (response.type === 'success') {
         if (response.data.user.email.endsWith('@g.skku.edu')) {
+          //이메일 도메인 확인
           const googleCredential = auth.GoogleAuthProvider.credential(
             response.data.idToken,
           );
           const res = await auth().signInWithCredential(googleCredential);
+          isNewUser(res.user.uid).then(result => {
+            //가입인지 로그인인지 확인
+            if (result) {
+              navigation.navigate('SignUp');
+              console.log('new');
+            } else {
+              navigation.navigate('Main');
+              console.log('already signed');
+            }
+          });
         } else {
+          //SKKU 메일이 아닐경우
           Alert.alert('Alert', "It's not a SKKU email. Please use g.skku.edu", [
             {text: '확인'},
           ]);
           try {
             await GoogleSignin.revokeAccess();
-            // Google Account disconnected from your app.
-            // Perform clean-up actions, such as deleting data associated with the disconnected account.
           } catch (error) {
             console.error(error);
           }
         }
       } else {
+        //구글 로그인 실패
         console.log('cancelled by user');
       }
     } catch (error) {
-      if (isErrorWithCode(error)) {
-        switch (error.code) {
-          case statusCodes.IN_PROGRESS:
-            // operation (eg. sign in) already in progress
-            break;
-          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-            // Android only, play services not available or outdated
-            break;
-          default:
-          // some other error happened
-        }
-      } else {
-        // an error that's not related to google sign in occurred
-      }
+      console.error(error);
     }
   };
 
   return (
     <View style={stylesLogin.loginContainer}>
-      <Image source={require('../components/PinPostLogo.jpg')} style={[stylesLogin.logo]} />
+      <Image
+        source={require('../components/PinPostLogo.jpg')}
+        style={[stylesLogin.logo]}
+      />
       <Text style={stylesLogin.title}>아래 버튼을 통해 로그인</Text>
       <GoogleSigninButton
         size={GoogleSigninButton.Size.Wide}
@@ -138,11 +150,11 @@ function Login({navigation}: Props) {
       />
       <View style={stylesLogin.authOptionsContainer}>
         <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-          <Text>회원가입  </Text>
+          <Text>회원가입 </Text>
         </TouchableOpacity>
         <Text>/</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Main')}>
-          <Text>  비밀번호 찾기</Text>
+          <Text> 비밀번호 찾기</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity onPress={() => navigation.navigate('Main')}>
