@@ -28,13 +28,13 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import auth from '@react-native-firebase/auth';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 import Login from './src/pages/Login';
 import Main_map from './src/pages/Main_map';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SignUp from './src/pages/SignUp';
 
 type SectionProps = PropsWithChildren<{
@@ -68,22 +68,17 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 }
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<FirebaseAuthTypes.User | null>();
 
   const Stack = createNativeStackNavigator<NavParamList>();
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  function onAuthStateChanged(user: any) {
+  function onAuthStateChanged(user: FirebaseAuthTypes.User | null) {
     setUser(user);
   }
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; 
+    return subscriber;
   }, []);
 
   //*************앱 켤때마다 로그아웃 시켜서 로그인 테스트용************///
@@ -104,23 +99,26 @@ function App(): React.JSX.Element {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Landing" options={{headerShown: false}} component={Login} />
-        <Stack.Screen name="Main" options={{headerShown: false}} component={Main_map} />
-        <Stack.Screen name="SignUp" options={{headerShown: false}} component={SignUp} />
+        <Stack.Screen
+          name="Landing"
+          options={{headerShown: false}}
+          component={Login}
+        />
+        <Stack.Screen
+          name="Main"
+          options={{headerShown: false}}
+          children={({navigation}) => (
+            <Main_map navigation={navigation} user={user} />
+          )}
+        />
+        <Stack.Screen
+          name="SignUp"
+          options={{headerShown: false}}
+          component={SignUp}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
-
-  //return (
-  //  <View style={{flex: 1}}>
-  //    {user ? <NaverMapView style={{flex: 1}} /> : <LoginScreen />}
-  //  </View>
-  //);
-  //return (
-  //  <View style={{flex: 1}}>
-  //    <NaverMapView style={{flex: 1}} />
-  //  </View>
-  //);
 }
 
 const styles = StyleSheet.create({

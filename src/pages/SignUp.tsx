@@ -1,11 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import auth from '@react-native-firebase/auth';
-import {
-  GoogleSignin,
-  statusCodes,
-  isErrorWithCode,
-  GoogleSigninButton,
-} from '@react-native-google-signin/google-signin';
+import React, {useState, useEffect, useRef} from 'react';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import db from '@react-native-firebase/firestore';
 import {
   Alert,
   Dimensions,
@@ -79,11 +74,37 @@ const stylesLogin = StyleSheet.create({
 });
 
 function SignUp({navigation}: Props) {
+  const userRef = useRef<FirebaseAuthTypes.User | null>(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [nickname, setNickname] = useState('');
+
+  useEffect(() => {
+    userRef.current = auth().currentUser;
+    if (userRef.current?.email) {
+      setEmail(userRef.current.email);
+    }
+  }, []);
+
+  const handleSubmit = async () => {
+    const uid = userRef.current?.uid;
+    if (!uid) {
+      console.error('User is not logged in');
+      return;
+    }
+
+    try {
+      await db().collection('users').doc(uid).set({
+        name: name,
+        nickname: nickname,
+        email: email,
+      });
+      navigation.replace('Main');
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+  };
 
   return (
     <View style={stylesLogin.loginContainer}>
@@ -100,43 +121,23 @@ function SignUp({navigation}: Props) {
         />
       </TouchableOpacity>
       <View style={stylesLogin.inputContainer}>
+        <TextInput style={stylesLogin.input} value={email} editable={false} />
         <TextInput
           style={stylesLogin.input}
           placeholder="이름"
           value={name}
           onChangeText={setName}
-        />
-        <TextInput
-          style={stylesLogin.input}
-          placeholder="이메일"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-        />
-        <TextInput
-          style={stylesLogin.input}
-          placeholder="비밀번호"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-        <TextInput
-          style={stylesLogin.input}
-          placeholder="비밀번호 재확인"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
+          placeholderTextColor="#ccc"
         />
         <TextInput
           style={stylesLogin.input}
           placeholder="닉네임"
           value={nickname}
           onChangeText={setNickname}
+          placeholderTextColor="#ccc"
         />
       </View>
-      <TouchableOpacity
-        style={stylesLogin.signUpButton}
-        onPress={() => console.log('가입하기')}>
+      <TouchableOpacity style={stylesLogin.signUpButton} onPress={handleSubmit}>
         <Text style={stylesLogin.signUpButtonText}>가입하기</Text>
       </TouchableOpacity>
     </View>

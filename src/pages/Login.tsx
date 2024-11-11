@@ -88,7 +88,7 @@ function Login({navigation}: Props) {
   const isNewUser = async (uid: string): Promise<boolean> => {
     try {
       const userDoc = await db().collection('users').doc(uid).get();
-      return userDoc.exists;
+      return !userDoc.exists;
     } catch (error) {
       console.error(error);
     }
@@ -112,7 +112,7 @@ function Login({navigation}: Props) {
               navigation.navigate('SignUp');
               console.log('new');
             } else {
-              navigation.navigate('Main');
+              navigation.replace('Main');
               console.log('already signed');
             }
           });

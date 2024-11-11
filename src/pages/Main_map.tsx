@@ -30,6 +30,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import auth from '@react-native-firebase/auth';
+import {CommonActions} from '@react-navigation/native';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -61,20 +62,43 @@ function Section({children, title}: SectionProps): React.JSX.Element {
   );
 }
 
-function Main_map({navigation}: Props): React.JSX.Element {
+function Main_map({navigation, user}: Props): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const initialLocation = {
     latitude: 37.291175,
-    longitude: 126.968310,
+    longitude: 126.96831,
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   };
 
+  useEffect(() => {
+    //로그인 해제시 로그인 페이지로..
+    if (!user) {
+      navigation.navigate('Landing');
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (navigation.getState().routes.length > 1) {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'Main'}],
+        }),
+      );
+    }
+  }, []);
+
   return (
     <View style={{flex: 1}}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={{ position: 'absolute', top: 20, left: 20, zIndex: 1 }}>
-        <Image source={require('../components/BackPage.jpg')} style={styles.back_logo} />
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={{position: 'absolute', top: 20, left: 20, zIndex: 1}}>
+        <Image
+          source={require('../components/BackPage.jpg')}
+          style={styles.back_logo}
+        />
       </TouchableOpacity>
       <NaverMapView
         style={{flex: 1}}
