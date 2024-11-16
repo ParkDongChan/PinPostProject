@@ -160,6 +160,7 @@ function Setting({navigation}: Props) {
               fontSize: 16,
               textAlign: 'right',
               flexShrink: 1,
+              color: '#B0AFAF',
             }}
           >
             {email}
