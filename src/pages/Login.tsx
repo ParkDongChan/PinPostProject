@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import auth from '@react-native-firebase/auth';
-import db from '@react-native-firebase/firestore';
+import {GoogleLogin} from '../backend';
 import {
   GoogleSignin,
   statusCodes,
@@ -85,57 +84,6 @@ function Login({navigation}: Props) {
     });
   }, []);
 
-  const isNewUser = async (uid: string): Promise<boolean> => {
-    try {
-      const userDoc = await db().collection('users').doc(uid).get();
-      return !userDoc.exists;
-    } catch (error) {
-      console.error(error);
-    }
-    return true;
-  };
-
-  const GoogleLogin = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const response = await GoogleSignin.signIn();
-      if (response.type === 'success') {
-        if (response.data.user.email.endsWith('@g.skku.edu')) {
-          //이메일 도메인 확인
-          const googleCredential = auth.GoogleAuthProvider.credential(
-            response.data.idToken,
-          );
-          const res = await auth().signInWithCredential(googleCredential);
-          isNewUser(res.user.uid).then(result => {
-            //가입인지 로그인인지 확인
-            if (result) {
-              navigation.navigate('SignUp');
-              console.log('new');
-            } else {
-              navigation.replace('Main');
-              console.log('already signed');
-            }
-          });
-        } else {
-          //SKKU 메일이 아닐경우
-          Alert.alert('Alert', "It's not a SKKU email. Please use g.skku.edu", [
-            {text: '확인'},
-          ]);
-          try {
-            await GoogleSignin.revokeAccess();
-          } catch (error) {
-            console.error(error);
-          }
-        }
-      } else {
-        //구글 로그인 실패
-        console.log('cancelled by user');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <View style={stylesLogin.loginContainer}>
       <Image
@@ -146,7 +94,9 @@ function Login({navigation}: Props) {
       <GoogleSigninButton
         size={GoogleSigninButton.Size.Wide}
         color={GoogleSigninButton.Color.Dark}
-        onPress={GoogleLogin}
+        onPress={() => {
+          GoogleLogin(navigation);
+        }}
       />
       <View style={stylesLogin.authOptionsContainer}>
         <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>

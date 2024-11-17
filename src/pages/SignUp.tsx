@@ -15,6 +15,7 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import {handleSignUp} from '../backend';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
@@ -86,26 +87,6 @@ function SignUp({navigation}: Props) {
     }
   }, []);
 
-  const handleSubmit = async () => {
-    const uid = userRef.current?.uid;
-    if (!uid) {
-      console.error('User is not logged in');
-      return;
-    }
-
-    try {
-      await db().collection('users').doc(uid).set({
-        name: name,
-        nickname: nickname,
-        email: email,
-      });
-      navigation.replace('Main');
-    } catch (error) {
-      console.error(error);
-      return;
-    }
-  };
-
   return (
     <View style={stylesLogin.loginContainer}>
       <TouchableOpacity
@@ -137,7 +118,11 @@ function SignUp({navigation}: Props) {
           placeholderTextColor="#ccc"
         />
       </View>
-      <TouchableOpacity style={stylesLogin.signUpButton} onPress={handleSubmit}>
+      <TouchableOpacity
+        style={stylesLogin.signUpButton}
+        onPress={() => {
+          handleSignUp(userRef, name, email, nickname, navigation);
+        }}>
         <Text style={stylesLogin.signUpButtonText}>가입하기</Text>
       </TouchableOpacity>
     </View>
