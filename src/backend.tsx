@@ -8,6 +8,12 @@ import {
 } from '@react-native-google-signin/google-signin';
 import {Alert} from 'react-native';
 
+export interface UserData {
+  name: string;
+  email: string;
+  nickname: string;
+}
+
 export const isNewUser = async (uid: string): Promise<boolean> => {
   try {
     const userDoc = await db().collection('users').doc(uid).get();
@@ -83,4 +89,27 @@ export const handleSignUp = async (
     console.error(error);
     return;
   }
+};
+
+export const getUserInfo = async (): Promise<UserData | null> => {
+  const currentUser = auth().currentUser;
+  if (!currentUser) {
+    //로그인 되어있지 않을 경우 null 반환
+    return null;
+  }
+  try {
+    //user 컬렉션에서 문서 찾기
+    const userDoc = await db().collection('users').doc(currentUser.uid).get();
+
+    if (userDoc.exists) {
+      //문서가 존재하면 데이터를 반환
+      console.log(userDoc.data() as UserData);
+      return userDoc.data() as UserData;
+    } else {
+      console.error('User document does not exist in Firestore.');
+    }
+  } catch (error) {
+    console.error('Error fetching user document:', error);
+  }
+  return null;
 };
