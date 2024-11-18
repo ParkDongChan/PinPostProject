@@ -120,7 +120,7 @@ export const getUserInfo = async (): Promise<UserData | null> => {
   return null;
 };
 
-export const uploadPost = async (
+export const uploadComment = async (
   postID: string,
   userID: string,
   text: string,
