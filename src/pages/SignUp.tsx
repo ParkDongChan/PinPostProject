@@ -1,6 +1,5 @@
-import React, {useState, useEffect, useRef} from 'react';
-import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import db from '@react-native-firebase/firestore';
+import React, {useState, useEffect} from 'react';
+import auth from '@react-native-firebase/auth';
 import {
   Alert,
   Dimensions,
@@ -75,16 +74,12 @@ const stylesLogin = StyleSheet.create({
 });
 
 function SignUp({navigation}: Props) {
-  const userRef = useRef<FirebaseAuthTypes.User | null>(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
 
   useEffect(() => {
-    userRef.current = auth().currentUser;
-    if (userRef.current?.email) {
-      setEmail(userRef.current.email);
-    }
+    setEmail(auth().currentUser?.email ?? '');
   }, []);
 
   return (
@@ -121,7 +116,7 @@ function SignUp({navigation}: Props) {
       <TouchableOpacity
         style={stylesLogin.signUpButton}
         onPress={() => {
-          handleSignUp(userRef, name, email, nickname, navigation);
+          handleSignUp(name, email, nickname, navigation);
         }}>
         <Text style={stylesLogin.signUpButtonText}>가입하기</Text>
       </TouchableOpacity>

@@ -24,6 +24,13 @@ export const isNewUser = async (uid: string): Promise<boolean> => {
   return true;
 };
 
+export const initialGoogleLogin = () => {
+  GoogleSignin.configure({
+    webClientId:
+      '215594584032-mj6lq9omiq8dm80ustqqanmoe45iljsp.apps.googleusercontent.com',
+  });
+};
+
 export const GoogleLogin = async (navigation: Props) => {
   try {
     await GoogleSignin.hasPlayServices();
@@ -66,13 +73,12 @@ export const GoogleLogin = async (navigation: Props) => {
 };
 
 export const handleSignUp = async (
-  userRef: any,
   name: string,
   email: string,
   nickname: string,
   navigation: Props,
 ) => {
-  const uid = userRef.current?.uid;
+  const uid = auth().currentUser?.uid;
   if (!uid) {
     console.error('User is not logged in');
     return;

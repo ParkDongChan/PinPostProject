@@ -1,11 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import {GoogleLogin} from '../backend';
-import {
-  GoogleSignin,
-  statusCodes,
-  isErrorWithCode,
-  GoogleSigninButton,
-} from '@react-native-google-signin/google-signin';
+import React, {useEffect} from 'react';
+import {GoogleLogin, initialGoogleLogin} from '../backend';
+import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
 import {
   Alert,
   Dimensions,
@@ -77,12 +72,7 @@ const stylesLogin = StyleSheet.create({
 });
 
 function Login({navigation}: Props) {
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId:
-        '215594584032-mj6lq9omiq8dm80ustqqanmoe45iljsp.apps.googleusercontent.com',
-    });
-  }, []);
+  useEffect(initialGoogleLogin, []);
 
   return (
     <View style={stylesLogin.loginContainer}>
