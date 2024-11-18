@@ -122,15 +122,17 @@ export const getUserInfo = async (): Promise<UserData | null> => {
 
 export const uploadComment = async (
   postID: string,
-  userID: string,
   text: string,
+  is_anonymous: boolean,
 ): Promise<number> => {
   try {
     // 댓글의 정보 생성
     const comment = {
-      author: `/users/${userID}`,
+      author: is_anonymous
+        ? db().collection('users').doc('WVWjIntRQVmi5sOppdPS') //users의 "익명" uid
+        : db().collection('users').doc(auth().currentUser?.uid),
       text: text,
-      timestamp: db.FieldValue.serverTimestamp(), // 서버 타임스탬프 사용
+      timestamp: new Date(), // 서버 타임스탬프 대신 현재 시간 사용
     };
 
     // Firestore에서 posts 컬렉션의 특정 문서(postID)를 참조하고 comments 배열에 댓글 추가
@@ -141,9 +143,9 @@ export const uploadComment = async (
         comments: db.FieldValue.arrayUnion(comment),
       });
 
-    return 1; // 성공 시 1 반환
+    return Promise.resolve(1); // 성공 시 1 반환
   } catch (error) {
     console.error('Error uploading comment:', error);
-    return 0; // 실패 시 0 반환
+    return Promise.resolve(0); // 실패 시 0 반환
   }
 };
