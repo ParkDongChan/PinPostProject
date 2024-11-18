@@ -119,3 +119,31 @@ export const getUserInfo = async (): Promise<UserData | null> => {
   }
   return null;
 };
+
+export const uploadPost = async (
+  postID: string,
+  userID: string,
+  text: string,
+): Promise<number> => {
+  try {
+    // 댓글의 정보 생성
+    const comment = {
+      author: `/users/${userID}`,
+      text: text,
+      timestamp: db.FieldValue.serverTimestamp(), // 서버 타임스탬프 사용
+    };
+
+    // Firestore에서 posts 컬렉션의 특정 문서(postID)를 참조하고 comments 배열에 댓글 추가
+    await db()
+      .collection('posts')
+      .doc(postID)
+      .update({
+        comments: db.FieldValue.arrayUnion(comment),
+      });
+
+    return 1; // 성공 시 1 반환
+  } catch (error) {
+    console.error('Error uploading comment:', error);
+    return 0; // 실패 시 0 반환
+  }
+};
