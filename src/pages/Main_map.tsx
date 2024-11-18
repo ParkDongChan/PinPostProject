@@ -21,7 +21,6 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-
 import {
   Colors,
   DebugInstructions,
@@ -29,40 +28,9 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import auth from '@react-native-firebase/auth';
 import {CommonActions} from '@react-navigation/native';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function Main_map({navigation, user}: Props): React.JSX.Element {
+function Main_map({navigation}: Props): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const initialLocation = {
@@ -71,13 +39,6 @@ function Main_map({navigation, user}: Props): React.JSX.Element {
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   };
-
-  useEffect(() => {
-    //로그인 해제시 로그인 페이지로..
-    if (!user) {
-      navigation.navigate('Landing');
-    }
-  }, [user]);
 
   useEffect(() => {
     if (navigation.getState().routes.length > 1) {

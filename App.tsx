@@ -20,7 +20,6 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-
 import {
   Colors,
   DebugInstructions,
@@ -28,18 +27,27 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-
 import Login from './src/pages/Login';
 import Main_map from './src/pages/Main_map';
-import {NavigationContainer} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  useNavigationContainerRef,
+  CommonActions,
+} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SignUp from './src/pages/SignUp';
 
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
+
+type NavParamList = {
+  Landing: undefined;
+  Main: undefined;
+  SignUp: undefined;
+};
 
 function Section({children, title}: SectionProps): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -68,16 +76,20 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 }
 
 function App(): React.JSX.Element {
-  const [user, setUser] = useState<FirebaseAuthTypes.User | null>();
-
   const Stack = createNativeStackNavigator<NavParamList>();
-
-  function onAuthStateChanged(user: FirebaseAuthTypes.User | null) {
-    setUser(user);
-  }
+  const navigationRef = useNavigationContainerRef<NavParamList>();
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    const subscriber = auth().onAuthStateChanged(user => {
+      if (!user) {
+        navigationRef.current?.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: 'Landing'}], //스택 초기화하고 "Landing" 페이지로 이동
+          }),
+        );
+      }
+    });
     return subscriber;
   }, []);
 
@@ -97,7 +109,7 @@ function App(): React.JSX.Element {
   //************************************************************/ //
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
         <Stack.Screen
           name="Landing"
@@ -107,9 +119,7 @@ function App(): React.JSX.Element {
         <Stack.Screen
           name="Main"
           options={{headerShown: false}}
-          children={({navigation}) => (
-            <Main_map navigation={navigation} user={user} />
-          )}
+          children={({navigation}) => <Main_map navigation={navigation} />}
         />
         <Stack.Screen
           name="SignUp"
