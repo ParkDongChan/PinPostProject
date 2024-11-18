@@ -118,8 +118,7 @@ function Main_map({navigation, user}: Props): React.JSX.Element {
         style={{flex: 1}}
         initialRegion={{
           ...initialLocation,
-        }}
-      />
+        }}/>
       {markers.map((marker) => (
           <NaverMapMarkerOverlay 
             latitude={marker.latitude}
