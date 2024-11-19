@@ -152,20 +152,21 @@ export const uploadComment = async (
   }
 };
 
-export const uploadPost = async ( 
+export const uploadPost = async (
   title: string,
   body: string,
   building_id: number,
   location: Geolocation,
   is_anonymous: boolean,
-  photoUri?: string
+  photoUri?: string,
 ): Promise<number> => {
-  try {    
-
+  try {
     //사진 firestore에 업로드
     let photoUrl: string | null = null;
     if (photoUri) {
-      const photoRef = storage().ref(`posts/${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`);
+      const photoRef = storage().ref(
+        `posts/${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`,
+      );
       await photoRef.putFile(photoUri);
       photoUrl = await photoRef.getDownloadURL();
       console.log('Photo uploaded successfully:', photoUrl);
@@ -183,16 +184,48 @@ export const uploadPost = async (
       likes: 0,
       likedUsers: [],
       comments: [],
-      photoUrl, 
+      photoUrl,
       timestamp: new Date(), // 서버 타임스탬프 대신 현재 시간 사용
     };
 
     const docRef = await db().collection('posts').add(post);
-    console.log("Document written with ID: ", docRef.id);
+    console.log('Document written with ID: ', docRef.id);
 
     return Promise.resolve(1); // 성공 시 1 반환
   } catch (error) {
     console.error('Error uploading post:', error);
     return Promise.resolve(0); // 실패 시 0 반환
+  }
+};
+
+export const getComments = async (postID: string): Promise<any[]> => {
+  try {
+    const postDoc = await db().collection('posts').doc(postID).get(); // 특정 posts의 값 넣기
+
+    if (postDoc.exists) {
+      // 문서가 존재하면 comments 배열을 반환
+      const postData = postDoc.data();
+      if (postData?.comments) {
+        const comments = postData.comments.map((comment: any) => ({
+          ...comment,
+          timestamp: new Date(
+            comment.timestamp.seconds * 1000 +
+              comment.timestamp.nanoseconds / 1e6,
+          ),
+        }));
+        console.log('Comments with Firestore Timestamp:', comments);
+        return comments; // 변환 없이 comments 배열 반환
+      } else {
+        console.log('No comments found for this post.');
+        return [];
+        // 문서 없으면 빈 배열 반환
+      }
+    } else {
+      console.error(`Post with ID ${postID} does not exist.`);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    return [];
   }
 };
