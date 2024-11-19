@@ -1,5 +1,7 @@
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import db from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
+
 import {
   GoogleSignin,
   statusCodes,
@@ -146,6 +148,51 @@ export const uploadComment = async (
     return Promise.resolve(1); // 성공 시 1 반환
   } catch (error) {
     console.error('Error uploading comment:', error);
+    return Promise.resolve(0); // 실패 시 0 반환
+  }
+};
+
+export const uploadPost = async ( 
+  title: string,
+  body: string,
+  building_id: number,
+  location: Geolocation,
+  is_anonymous: boolean,
+  photoUri?: string
+): Promise<number> => {
+  try {    
+
+    //사진 firestore에 업로드
+    let photoUrl: string | null = null;
+    if (photoUri) {
+      const photoRef = storage().ref(`posts/${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`);
+      await photoRef.putFile(photoUri);
+      photoUrl = await photoRef.getDownloadURL();
+      console.log('Photo uploaded successfully:', photoUrl);
+    }
+
+    // 게시물 정보 생성
+    const post = {
+      author: is_anonymous
+        ? db().collection('users').doc('WVWjIntRQVmi5sOppdPS') //users의 "익명" uid
+        : db().collection('users').doc(auth().currentUser?.uid),
+      title: title,
+      body: body,
+      building_id: building_id,
+      location: location,
+      likes: 0,
+      likedUsers: [],
+      comments: [],
+      photoUrl, 
+      timestamp: new Date(), // 서버 타임스탬프 대신 현재 시간 사용
+    };
+
+    const docRef = await db().collection('posts').add(post);
+    console.log("Document written with ID: ", docRef.id);
+
+    return Promise.resolve(1); // 성공 시 1 반환
+  } catch (error) {
+    console.error('Error uploading post:', error);
     return Promise.resolve(0); // 실패 시 0 반환
   }
 };
