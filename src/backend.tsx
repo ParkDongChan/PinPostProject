@@ -1,5 +1,5 @@
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import db from '@react-native-firebase/firestore';
+import db, { GeoPoint } from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 
 import {
@@ -156,7 +156,7 @@ export const uploadPost = async (
   title: string,
   body: string,
   building_id: number,
-  location: Geolocation,
+  location: GeoPoint,
   is_anonymous: boolean,
   photoUri?: string,
 ): Promise<number> => {
