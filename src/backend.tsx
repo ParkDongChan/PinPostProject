@@ -206,13 +206,19 @@ export const getComments = async (postID: string): Promise<any[]> => {
       // 문서가 존재하면 comments 배열을 반환
       const postData = postDoc.data();
       if (postData?.comments) {
-        const comments = postData.comments.map((comment: any) => ({
-          ...comment,
-          timestamp: new Date(
-            comment.timestamp.seconds * 1000 +
-              comment.timestamp.nanoseconds / 1e6,
-          ),
-        }));
+        const comments = await Promise.all(
+          postData.comments.map(async (comment: any) => {
+            const refDoc = await comment.author.get();
+            return {
+              ...comment,
+              author: refDoc.data().nickname,
+              timestamp: new Date(
+                comment.timestamp.seconds * 1000 +
+                  comment.timestamp.nanoseconds / 1e6,
+              ),
+            };
+          }),
+        );
         console.log('Comments with Firestore Timestamp:', comments);
         return comments; // 변환 없이 comments 배열 반환
       } else {

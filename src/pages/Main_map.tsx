@@ -29,9 +29,13 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import {CommonActions} from '@react-navigation/native';
+import {getComments} from '../backend';
 
 function Main_map({navigation}: Props): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+
+  /***********getComments() 테스트용************/
+  getComments('6VFaoWXfv2m2aHDasMrY');
 
   const initialLocation = {
     latitude: 37.291175,
