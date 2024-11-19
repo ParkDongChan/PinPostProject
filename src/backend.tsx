@@ -1,5 +1,5 @@
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import db, { GeoPoint } from '@react-native-firebase/firestore';
+import db, {GeoPoint} from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 
 import {
@@ -14,6 +14,12 @@ export interface UserData {
   name: string;
   email: string;
   nickname: string;
+}
+
+export interface Comment {
+  author: string;
+  text: string;
+  timestamp: Date;
 }
 
 export const isNewUser = async (uid: string): Promise<boolean> => {
@@ -111,7 +117,7 @@ export const getUserInfo = async (): Promise<UserData | null> => {
 
     if (userDoc.exists) {
       //문서가 존재하면 데이터를 반환
-      console.log(userDoc.data() as UserData);
+      console.log(userDoc.data());
       return userDoc.data() as UserData;
     } else {
       console.error('User document does not exist in Firestore.');
@@ -198,7 +204,7 @@ export const uploadPost = async (
   }
 };
 
-export const getComments = async (postID: string): Promise<any[]> => {
+export const getComments = async (postID: string): Promise<Comment[]> => {
   try {
     const postDoc = await db().collection('posts').doc(postID).get(); // 특정 posts의 값 넣기
 
