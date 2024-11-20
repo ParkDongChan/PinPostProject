@@ -88,8 +88,9 @@ function Main_map({navigation}: Props): React.JSX.Element {
           ...initialLocation,
         }}
       />
-      {markers.map(marker => (
+      {markers.map((marker, index) => (
         <NaverMapMarkerOverlay
+          key={index}
           latitude={marker.latitude}
           longitude={marker.longitude}
           width={50}
