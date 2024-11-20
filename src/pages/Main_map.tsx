@@ -5,7 +5,7 @@
  * @format
  */
 
-import {NaverMapView} from '@mj-studio/react-native-naver-map';
+import {NaverMapMarkerOverlay, NaverMapView} from '@mj-studio/react-native-naver-map';
 import React, {useState, useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
@@ -43,7 +43,13 @@ function Main_map({navigation}: Props): React.JSX.Element {
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   };
-
+  const markers = [
+    {
+      latitude: 37.291175,
+      longitude: 126.96831,
+      title: 'Initial Marker',
+    },
+  ];
   useEffect(() => {
     if (navigation.getState().routes.length > 1) {
       navigation.dispatch(
@@ -65,12 +71,31 @@ function Main_map({navigation}: Props): React.JSX.Element {
           style={styles.back_logo}
         />
       </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Setting')}
+        style={{position: 'absolute', top: 20, left: 80, zIndex: 1}}>
+        <Image
+          source={require('../components/Setting.png')}
+          style={styles.setting}
+        />
+      </TouchableOpacity>
       <NaverMapView
         style={{flex: 1}}
         initialRegion={{
           ...initialLocation,
-        }}
-      />
+        }}/>
+      {markers.map((marker) => (
+          <NaverMapMarkerOverlay 
+            latitude={marker.latitude}
+            longitude={marker.longitude}
+            width={50}
+            height={50}
+            caption={{
+              text: marker.title,
+            }}
+            image={{httpUri: 'https://ifh.cc/g/3cLLQa.jpg'}}
+          />
+        ))}
     </View>
   );
 }
@@ -81,6 +106,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   back_logo: {
+    width: 20,
+    height: 20,
+    resizeMode: 'contain',
+  },
+  setting: {
     width: 20,
     height: 20,
     resizeMode: 'contain',

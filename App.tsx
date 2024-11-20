@@ -38,6 +38,7 @@ import {
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SignUp from './src/pages/SignUp';
+import Setting from './src/pages/Setting';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -125,6 +126,11 @@ function App(): React.JSX.Element {
           name="SignUp"
           options={{headerShown: false}}
           component={SignUp}
+        />
+        <Stack.Screen
+          name="Setting"
+          options={{headerShown: false}}
+          component={Setting}
         />
       </Stack.Navigator>
     </NavigationContainer>
