@@ -5,7 +5,10 @@
  * @format
  */
 
-import {NaverMapMarkerOverlay, NaverMapView} from '@mj-studio/react-native-naver-map';
+import {
+  NaverMapMarkerOverlay,
+  NaverMapView,
+} from '@mj-studio/react-native-naver-map';
 import React, {useState, useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
@@ -83,19 +86,20 @@ function Main_map({navigation}: Props): React.JSX.Element {
         style={{flex: 1}}
         initialRegion={{
           ...initialLocation,
-        }}/>
-      {markers.map((marker) => (
-          <NaverMapMarkerOverlay 
-            latitude={marker.latitude}
-            longitude={marker.longitude}
-            width={50}
-            height={50}
-            caption={{
-              text: marker.title,
-            }}
-            image={{httpUri: 'https://ifh.cc/g/3cLLQa.jpg'}}
-          />
-        ))}
+        }}
+      />
+      {markers.map(marker => (
+        <NaverMapMarkerOverlay
+          latitude={marker.latitude}
+          longitude={marker.longitude}
+          width={50}
+          height={50}
+          caption={{
+            text: marker.title,
+          }}
+          image={{httpUri: 'https://ifh.cc/g/3cLLQa.jpg'}}
+        />
+      ))}
     </View>
   );
 }

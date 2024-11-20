@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef, useMemo} from 'react';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import db from '@react-native-firebase/firestore';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {
   Alert,
   Dimensions,
@@ -74,7 +75,6 @@ const styles = StyleSheet.create({
 });
 
 function Setting({navigation}: Props) {
-
   const [nickName, setNickName] = useState('');
   const [email, setEmail] = useState('');
 
@@ -95,7 +95,7 @@ function Setting({navigation}: Props) {
     };
 
     fetchNickname();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth().currentUser?.uid]);
 
   return (
@@ -108,9 +108,7 @@ function Setting({navigation}: Props) {
           style={styles.back_logo}
         />
       </TouchableOpacity>
-      <Text style={{marginLeft: 30, fontSize: 20}}>
-        내 정보
-      </Text>
+      <Text style={{marginLeft: 30, fontSize: 20}}>내 정보</Text>
       <View
         style={{
           position: 'relative',
@@ -122,8 +120,7 @@ function Setting({navigation}: Props) {
           backgroundColor: '#E6E3E3',
           alignItems: 'center',
           paddingHorizontal: 20,
-        }}
-      >
+        }}>
         <Image
           source={require('../components/Setting.png')}
           style={{
@@ -138,13 +135,12 @@ function Setting({navigation}: Props) {
             fontSize: 20,
             textAlign: 'center',
             flex: 1,
-          }}
-        >
+          }}>
           {nickName} 님
         </Text>
       </View>
-      <View style={{ marginTop: 20 }}>
-        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>계정</Text>
+      <View style={{marginTop: 20}}>
+        <Text style={{fontSize: 18, fontWeight: 'bold'}}>계정</Text>
         <View
           style={{
             flexDirection: 'row',
@@ -152,17 +148,15 @@ function Setting({navigation}: Props) {
             alignItems: 'center',
             width: '100%',
             paddingTop: 25,
-          }}
-        >
-          <Text style={{ fontSize: 16 }}>이메일</Text>
+          }}>
+          <Text style={{fontSize: 16}}>이메일</Text>
           <Text
             style={{
               fontSize: 16,
               textAlign: 'right',
               flexShrink: 1,
               color: '#B0AFAF',
-            }}
-          >
+            }}>
             {email}
           </Text>
         </View>
@@ -173,9 +167,8 @@ function Setting({navigation}: Props) {
             alignItems: 'center',
             width: '100%',
             paddingTop: 15,
-          }}
-        >
-          <Text style={{ fontSize: 16 }}>비밀번호 변경</Text>
+          }}>
+          <Text style={{fontSize: 16}}>비밀번호 변경</Text>
         </View>
         <View
           style={{
@@ -184,9 +177,8 @@ function Setting({navigation}: Props) {
             alignItems: 'center',
             width: '100%',
             paddingTop: 15,
-          }}
-        >
-          <Text style={{ fontSize: 16 }}>탈퇴</Text>
+          }}>
+          <Text style={{fontSize: 16}}>탈퇴</Text>
         </View>
       </View>
       <View
@@ -197,8 +189,8 @@ function Setting({navigation}: Props) {
           marginTop: 25,
         }}
       />
-      <View style={{ marginTop: 20 }}>
-        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>환경 설정</Text>
+      <View style={{marginTop: 20}}>
+        <Text style={{fontSize: 18, fontWeight: 'bold'}}>환경 설정</Text>
         <View
           style={{
             flexDirection: 'row',
@@ -206,9 +198,8 @@ function Setting({navigation}: Props) {
             alignItems: 'center',
             width: '100%',
             paddingTop: 25,
-          }}
-        >
-          <Text style={{ fontSize: 16 }}>공지 사항</Text>
+          }}>
+          <Text style={{fontSize: 16}}>공지 사항</Text>
         </View>
         <View
           style={{
@@ -217,9 +208,8 @@ function Setting({navigation}: Props) {
             alignItems: 'center',
             width: '100%',
             paddingTop: 15,
-          }}
-        >
-          <Text style={{ fontSize: 16 }}>신고</Text>
+          }}>
+          <Text style={{fontSize: 16}}>신고</Text>
         </View>
       </View>
       <View
@@ -228,15 +218,13 @@ function Setting({navigation}: Props) {
           marginTop: 25,
           alignItems: 'center',
           justifyContent: 'center',
-        }}
-      >
+        }}>
         <Text
-          style={{ fontSize: 20, textAlign: 'center', color: '#FF0000'}}
+          style={{fontSize: 20, textAlign: 'center', color: '#FF0000'}}
           onPress={() => {
+            GoogleSignin.revokeAccess();
             auth().signOut();
-            navigation.navigate('Login');
-          }}
-        >
+          }}>
           로그아웃
         </Text>
       </View>

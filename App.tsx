@@ -94,8 +94,13 @@ function App(): React.JSX.Element {
     return subscriber;
   }, []);
 
+  useEffect(() => {
+    if (auth().currentUser) {
+      navigationRef.navigate('Main');
+    }
+  });
   //*************앱 켤때마다 로그아웃 시켜서 로그인 테스트용************///
-
+  /*
   useEffect(() => {
     GoogleSignin.revokeAccess();
     auth()
