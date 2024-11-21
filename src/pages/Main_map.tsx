@@ -32,7 +32,8 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import {CommonActions} from '@react-navigation/native';
-import {getComments, getPosts} from '../backend';
+import {getComments, getPosts, uploadComment, uploadPost} from '../backend';
+import db from '@react-native-firebase/firestore';
 
 function Main_map({navigation}: Props): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -49,6 +50,21 @@ function Main_map({navigation}: Props): React.JSX.Element {
   getPosts().then(posts => {
     console.log(posts);
   });
+  //*************************************/
+
+  /***********uploadComment() 테스트용************/
+  //uploadComment('liTHY40JGiQlB0St88Pj', '서버시간 사용 테스트', false);
+  //*************************************/
+
+  /***********uploadPost() 테스트용************/
+  /*
+  uploadPost(
+    '서버시간 사용 테스트',
+    '테스트여유',
+    12,
+    new db.GeoPoint(37.5665, 126.978),
+    false,
+  );
   //*************************************/
 
   const initialLocation = {

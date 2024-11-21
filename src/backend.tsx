@@ -224,7 +224,7 @@ export const uploadPost = async (
       likedUsers: [],
       comments: [],
       photoUrl,
-      timestamp: new Date(), // 서버 타임스탬프 대신 현재 시간 사용
+      timestamp: db.FieldValue.serverTimestamp(),
     };
 
     const docRef = await db().collection('posts').add(post);
@@ -251,10 +251,7 @@ export const getComments = async (postID: string): Promise<Comment[]> => {
             return {
               ...comment,
               author: refDoc.data().nickname,
-              timestamp: new Date(
-                comment.timestamp.seconds * 1000 +
-                  comment.timestamp.nanoseconds / 1e6,
-              ),
+              timestamp: comment.timestamp.toDate(),
             };
           }),
         );
