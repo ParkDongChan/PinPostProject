@@ -1,5 +1,8 @@
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import db, {GeoPoint} from '@react-native-firebase/firestore';
+import db, {
+  FirebaseFirestoreTypes,
+  GeoPoint,
+} from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 
 import {
@@ -20,6 +23,18 @@ export interface Comment {
   author: string;
   text: string;
   timestamp: Date;
+}
+
+export interface Post {
+  author: UserData;
+  title: string;
+  body: string;
+  photoUrl: string;
+  likedUsers: string[];
+  likes: number;
+  building_id: number;
+  timestamp: Date;
+  location: GeoPoint;
 }
 
 export const isNewUser = async (uid: string): Promise<boolean> => {
@@ -128,6 +143,24 @@ export const getUserInfo = async (): Promise<UserData | null> => {
   return null;
 };
 
+export const getUserData = async (
+  userRef: FirebaseFirestoreTypes.DocumentReference,
+): Promise<UserData | null> => {
+  try {
+    const userDoc = await userRef.get();
+
+    if (userDoc.exists) {
+      //문서가 존재하면 데이터를 반환
+      return userDoc.data() as UserData;
+    } else {
+      console.error('User document does not exist in Firestore.');
+    }
+  } catch (error) {
+    console.error('Error fetching user document:', error);
+  }
+  return null;
+};
+
 export const uploadComment = async (
   postID: string,
   text: string,
@@ -225,7 +258,6 @@ export const getComments = async (postID: string): Promise<Comment[]> => {
             };
           }),
         );
-        console.log('Comments with Firestore Timestamp:', comments);
         return comments; // 변환 없이 comments 배열 반환
       } else {
         console.log('No comments found for this post.');
@@ -240,4 +272,19 @@ export const getComments = async (postID: string): Promise<Comment[]> => {
     console.error('Error fetching comments:', error);
     return [];
   }
+};
+
+export const getPosts = async (): Promise<Post[]> => {
+  const snapshots = await db().collection('posts').get();
+  const posts = await Promise.all(
+    snapshots.docs.map(async doc => {
+      const {comments, ...data} = doc.data();
+      return {
+        ...data,
+        author: await getUserData(doc.data().author),
+        timestamp: doc.data().timestamp.toDate(),
+      } as Post;
+    }),
+  );
+  return posts;
 };
