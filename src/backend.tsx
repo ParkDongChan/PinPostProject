@@ -27,6 +27,7 @@ export interface Comment {
 
 export interface Post {
   author: UserData;
+  id: string;
   title: string;
   body: string;
   photoUrl: string;
@@ -279,6 +280,7 @@ export const getPosts = async (): Promise<Post[]> => {
       return {
         ...data,
         author: await getUserData(doc.data().author),
+        id: doc.id,
         timestamp: doc.data().timestamp.toDate(),
       } as Post;
     }),
