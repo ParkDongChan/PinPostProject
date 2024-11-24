@@ -41,6 +41,8 @@ import SignUp from './src/pages/SignUp';
 import Setting from './src/pages/Setting';
 import Community from './src/pages/Community';
 import Write from './src/pages/Write';
+import Post from './src/pages/Post';
+import CommunitySearch from './src/pages/CommunitySearch';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -53,6 +55,8 @@ type NavParamList = {
   Setting: undefined;
   Community: undefined;
   Write: undefined;
+  Post: undefined;
+  CommunitySearch: undefined
 };
 
 function Section({children, title}: SectionProps): React.JSX.Element {
@@ -151,6 +155,16 @@ function App(): React.JSX.Element {
           name="Write"
           options={{headerShown: false}}
           component={Write}
+        />
+        <Stack.Screen
+          name="Post"
+          options={{headerShown: false}}
+          component={Post}
+        />
+        <Stack.Screen
+          name="CommunitySearch"
+          options={{headerShown: false}}
+          component={CommunitySearch}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -153,7 +153,7 @@ function Main_map({navigation}: Props): React.JSX.Element {
       </NaverMapView>
       <View style={styles.bottomBar}>
         <TouchableOpacity
-          //onPress={() => navigation.navigate('Setting')}
+          onPress={() => navigation.navigate('CommunitySearch')}
           style={styles.bottomButton}
         >
           <Image
@@ -173,7 +173,7 @@ function Main_map({navigation}: Props): React.JSX.Element {
           <Text style={styles.bottomText}>커뮤니티</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          //onPress={() => navigation.navigate('Setting')}
+          onPress={() => navigation.navigate('Write')}
           style={styles.bottomButton}
         >
           <Image

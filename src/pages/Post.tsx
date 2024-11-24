@@ -38,6 +38,11 @@ const styles = StyleSheet.create({
     height: 20,
     resizeMode: 'contain',
   },
+  image_profile: {
+    width: 50,
+    height: 50,
+    resizeMode: 'contain',
+  },
   boardTitle: {
     fontSize: 20,
     position: 'absolute',
@@ -84,25 +89,9 @@ const styles = StyleSheet.create({
   },
 });
 
-function Community({navigation}: Props) {
-
-  const [posts, setPosts] = useState([]);
-
-  const fetchPosts = async () => {
-    try {
-      const data = await getPosts();
-      setPosts(data);
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-    }
-  };
-
-  useFocusEffect(
-    React.useCallback(() => {
-      fetchPosts();
-    }, [])
-  );
-
+function Post({ navigation, route }: { navigation: any; route: any }) {
+  const { post } = route.params;
+  console.log(post);
   return (
     <View style={styles.loginContainer}>
       <TouchableOpacity
@@ -114,37 +103,71 @@ function Community({navigation}: Props) {
         />
       </TouchableOpacity>
       <Text style={styles.boardTitle}>게시판</Text>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Write")}
-        style={{position: 'absolute', top: 25, right: 20, zIndex: 1}}>
-        <Image
-          source={require('../components/Pencil.jpg')}
-          style={styles.back_logo}
-        />
-      </TouchableOpacity>
       <View
         style={{
-          height: 1,
-          backgroundColor: '#B0AFAF',
-          width: '100%',
-          marginTop: 50,
-        }}
-      />
-      <ScrollView contentContainerStyle={{paddingRight: 5}}>
-      {posts.map((post, index) => (
-        <TouchableOpacity
-          key={index}
-          onPress={() => navigation.navigate("Post", { post })}
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          marginVertical: 10,
+          paddingTop: 50,
+          gap: 10,
+      }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            gap: 10,
+          }}
+        >
+          <View>
+            <Image
+              source={require('../components/Anonymous.png')}
+              style={styles.image_profile}
+            />
+          </View>
+          <View>
+            <Text
+              style={{
+                fontSize: 20,
+                textAlign: 'left',
+                fontWeight: 'bold',
+                flexShrink: 1,
+                color: '#000000',
+              }}
+            >
+              {post.author.nickname}
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                textAlign: 'left',
+                flexShrink: 1,
+                color: '#000000',
+              }}
+            >
+              {post.timestamp
+                ? new Date(post.timestamp).toLocaleString('en-GB', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false, // 24시간 형식
+                  }).replace(',', '') // ',' 제거
+                : 'No Timestamp'}
+            </Text>
+          </View>
+        </View>
+        <View
           style={{
             flexDirection: 'column',
             justifyContent: 'space-between',
-            marginVertical: 10,
-            paddingTop: 15,
+            paddingTop: 10,
             gap: 10,
-        }}>
+          }}
+        >
           <Text
             style={{
-              fontSize: 16,
+              fontSize: 20,
               textAlign: 'left',
               fontWeight: 'bold',
               flexShrink: 1,
@@ -163,85 +186,62 @@ function Community({navigation}: Props) {
           >
             {post.body}
           </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+        }}>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
               marginVertical: 10,
-          }}>
+              gap: 10,
+            }}
+          >
             <View
               style={{
                 flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginVertical: 10,
-                gap: 10,
+                gap: 5,
               }}
             >
-              <View
+              <Image
+                source={require('../components/Thumbs_Up.png')}
                 style={{
-                  flexDirection: 'row',
-                  gap: 5,
+                  width: 20,
+                  height: 20,
                 }}
-              >
-                <Image
-                  source={require('../components/Thumbs_Up.png')}
-                  style={{
-                    width: 20,
-                    height: 20,
-                  }}
-                />
-                <Text style={{color: "#FF0000"}}>{post.likes}</Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  gap: 5,
-                }}
-              >
-                <Image
-                  source={require('../components/Comment.png')}
-                  style={{
-                    width: 20,
-                    height: 20,
-                  }}
-                />
-                 <Text style={{color: "#0021F5"}}>{post.comments?.length || 0}</Text>
-              </View>
+              />
+              <Text style={{color: "#FF0000"}}>{post.likes}</Text>
             </View>
             <View
               style={{
                 flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginVertical: 10,
+                gap: 5,
               }}
             >
-              <Text>
-                {post.timestamp
-                  ? new Date(post.timestamp).toLocaleString('en-GB', {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      second: '2-digit',
-                      hour12: false, // 24시간 형식
-                    }).replace(',', '') // ',' 제거
-                  : 'No Timestamp'}
-              </Text>
+              <Image
+                source={require('../components/Comment.png')}
+                style={{
+                  width: 20,
+                  height: 20,
+                }}
+              />
+               <Text style={{color: "#0021F5"}}>{post.comments?.length || 0}</Text>
             </View>
           </View>
-          <View
-            style={{
-              height: 1,
-              backgroundColor: '#B0AFAF',
-              width: '100%',
-            }}
-          />
-        </TouchableOpacity>
-      ))}
-      </ScrollView>
+        </View>
+        <View
+          style={{
+            height: 1,
+            backgroundColor: '#B0AFAF',
+            width: '100%',
+          }}
+        />
+      </View>
     </View>
   );
 }
 
-export default Community;
+export default Post;
