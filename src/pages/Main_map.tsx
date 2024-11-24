@@ -97,14 +97,14 @@ function Main_map({navigation}: Props): React.JSX.Element {
     const fetchPosts = async () => {
       try {
         const data = await getPosts();
-        setPosts(data); // 상태에 저장
+        setPosts(data);
       } catch (error) {
         console.error('Error fetching posts:', error);
       }
     };
 
     fetchPosts();
-  }, []); // 컴포넌트 마운트 시 실행
+  }, []);
 
   console.log(posts);
 
@@ -163,7 +163,7 @@ function Main_map({navigation}: Props): React.JSX.Element {
           <Text style={styles.bottomText}>검색</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          //onPress={() => navigation.navigate('Setting')}
+          onPress={() => navigation.navigate('Community')}
           style={styles.bottomButton}
         >
           <Image
