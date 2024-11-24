@@ -38,6 +38,8 @@ import db from '@react-native-firebase/firestore';
 function Main_map({navigation}: Props): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
+  const [posts, setPosts] = useState([]);
+
   /***********getComments() 테스트용************/
   /*
   getComments('liTHY40JGiQlB0St88Pj').then(comment => {
@@ -91,6 +93,21 @@ function Main_map({navigation}: Props): React.JSX.Element {
     }
   }, []);
 
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const data = await getPosts();
+        setPosts(data); // 상태에 저장
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    };
+
+    fetchPosts();
+  }, []); // 컴포넌트 마운트 시 실행
+
+  console.log(posts);
+
   return (
     <View style={{flex: 1}}>
       <TouchableOpacity
@@ -114,20 +131,68 @@ function Main_map({navigation}: Props): React.JSX.Element {
         initialRegion={{
           ...initialLocation,
         }}
-      />
-      {markers.map((marker, index) => (
-        <NaverMapMarkerOverlay
-          key={index}
-          latitude={marker.latitude}
-          longitude={marker.longitude}
-          width={50}
-          height={50}
-          caption={{
-            text: marker.title,
-          }}
-          image={{httpUri: 'https://ifh.cc/g/3cLLQa.jpg'}}
-        />
-      ))}
+      >
+        {posts.map((marker, index) => {
+          console.log(marker.location);
+          return (
+            <NaverMapMarkerOverlay
+              key={index}
+              latitude={marker.location.latitude}
+              longitude={marker.location.longitude}
+              width={50}
+              height={50}
+              caption={{
+                text: marker.title,
+                textSize: 13,
+                color: '#000',
+              }}
+              image={require('../components/Location.png')}
+            />
+          )
+        })}
+      </NaverMapView>
+      <View style={styles.bottomBar}>
+        <TouchableOpacity
+          //onPress={() => navigation.navigate('Setting')}
+          style={styles.bottomButton}
+        >
+          <Image
+            source={require('../components/Search.jpg')}
+            style={styles.bottom_setting}
+          />
+          <Text style={styles.bottomText}>검색</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          //onPress={() => navigation.navigate('Setting')}
+          style={styles.bottomButton}
+        >
+          <Image
+            source={require('../components/MapMarker.jpg')}
+            style={styles.bottom_setting}
+          />
+          <Text style={styles.bottomText}>커뮤니티</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          //onPress={() => navigation.navigate('Setting')}
+          style={styles.bottomButton}
+        >
+          <Image
+            source={require('../components/Pencil.jpg')}
+            style={styles.bottom_setting}
+          />
+          <Text style={styles.bottomText}>글쓰기</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.bottomButton}
+          onPress={() => navigation.navigate('Setting')}
+        >
+          <Image
+            source={require('../components/Setting.png')}
+            style={styles.bottom_setting}
+          />
+          <Text style={styles.bottomText}>내 정보</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -147,6 +212,11 @@ const styles = StyleSheet.create({
     height: 20,
     resizeMode: 'contain',
   },
+  bottom_setting: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+  },
   sectionTitle: {
     fontSize: 24,
     fontWeight: '600',
@@ -158,6 +228,23 @@ const styles = StyleSheet.create({
   },
   highlight: {
     fontWeight: '700',
+  },
+  bottomBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    height: 100,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+  },
+  bottomButton: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  bottomText: {
+    fontSize: 14,
+    color: '#333',
   },
 });
 
