@@ -40,6 +40,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SignUp from './src/pages/SignUp';
 import Setting from './src/pages/Setting';
 import Community from './src/pages/Community';
+import Write from './src/pages/Write';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -51,6 +52,7 @@ type NavParamList = {
   SignUp: undefined;
   Setting: undefined;
   Community: undefined;
+  Write: undefined;
 };
 
 function Section({children, title}: SectionProps): React.JSX.Element {
@@ -140,10 +142,15 @@ function App(): React.JSX.Element {
           options={{headerShown: false}}
           component={Setting}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="Community"
           options={{headerShown: false}}
           component={Community}
+        />
+        <Stack.Screen
+          name="Write"
+          options={{headerShown: false}}
+          component={Write}
         />
       </Stack.Navigator>
     </NavigationContainer>

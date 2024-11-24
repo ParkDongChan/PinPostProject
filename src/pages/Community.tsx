@@ -111,6 +111,14 @@ function Community({navigation}: Props) {
         />
       </TouchableOpacity>
       <Text style={styles.boardTitle}>게시판</Text>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Write')}
+        style={{position: 'absolute', top: 25, right: 20, zIndex: 1}}>
+        <Image
+          source={require('../components/Pencil.jpg')}
+          style={styles.back_logo}
+        />
+      </TouchableOpacity>
       <View
         style={{
           height: 1,
@@ -177,7 +185,7 @@ function Community({navigation}: Props) {
                     height: 20,
                   }}
                 />
-                <Text>{post.likes}</Text>
+                <Text style={{color: "#FF0000"}}>{post.likes}</Text>
               </View>
               <View
                 style={{
@@ -192,7 +200,7 @@ function Community({navigation}: Props) {
                     height: 20,
                   }}
                 />
-                 <Text>{post.comments?.length || 0}</Text>
+                 <Text style={{color: "#0021F5"}}>{post.comments?.length || 0}</Text>
               </View>
             </View>
             <View

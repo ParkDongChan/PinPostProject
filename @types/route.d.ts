@@ -4,5 +4,6 @@ declare type NavParamList = {
     SignUp: undefined;
     Setting: undefined;
     Community: undefined;
+    Write: undefined;
   };
   declare type Props = NativeStackScreenProps<NavParamList, string>;
