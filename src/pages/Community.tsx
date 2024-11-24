@@ -17,6 +17,7 @@ import {
   View,
 } from 'react-native';
 import {getComments, getPosts, uploadComment, uploadPost} from '../backend';
+import { useFocusEffect } from '@react-navigation/native';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
@@ -87,18 +88,20 @@ function Community({navigation}: Props) {
 
   const [posts, setPosts] = useState([]);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const data = await getPosts();
-        setPosts(data);
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-      }
-    };
+  const fetchPosts = async () => {
+    try {
+      const data = await getPosts();
+      setPosts(data);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+  };
 
-    fetchPosts();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchPosts();
+    }, [])
+  );
 
   return (
     <View style={styles.loginContainer}>
@@ -112,7 +115,7 @@ function Community({navigation}: Props) {
       </TouchableOpacity>
       <Text style={styles.boardTitle}>게시판</Text>
       <TouchableOpacity
-        onPress={() => navigation.navigate('Write')}
+        onPress={() => navigation.navigate("Write")}
         style={{position: 'absolute', top: 25, right: 20, zIndex: 1}}>
         <Image
           source={require('../components/Pencil.jpg')}
