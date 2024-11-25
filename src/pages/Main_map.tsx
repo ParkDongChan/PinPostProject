@@ -18,7 +18,6 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Modal,
   Text,
   TextInput,
   TouchableOpacity,
@@ -33,13 +32,42 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import {CommonActions} from '@react-navigation/native';
-import {Comment, getComments} from '../backend';
+import {getComments, getPosts, uploadComment, uploadPost} from '../backend';
+import db from '@react-native-firebase/firestore';
 
 function Main_map({navigation}: Props): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
+  const [posts, setPosts] = useState([]);
+
   /***********getComments() 테스트용************/
-  getComments('6VFaoWXfv2m2aHDasMrY');
+  /*
+  getComments('liTHY40JGiQlB0St88Pj').then(comment => {
+    console.log(comment);
+  });
+  //*************************************/
+
+  /***********getPosts() 테스트용************/
+  /*
+  getPosts().then(posts => {
+    console.log(posts);
+  });
+  //*************************************/
+
+  /***********uploadComment() 테스트용************/
+  //uploadComment('liTHY40JGiQlB0St88Pj', '서버시간 사용 테스트', false);
+  //*************************************/
+
+  /***********uploadPost() 테스트용************/
+  /*
+  uploadPost(
+    '서버시간 사용 테스트',
+    '테스트여유',
+    12,
+    new db.GeoPoint(37.5665, 126.978),
+    false,
+  );
+  //*************************************/
 
   const initialLocation = {
     latitude: 37.291175,
@@ -54,21 +82,6 @@ function Main_map({navigation}: Props): React.JSX.Element {
       title: 'Initial Marker',
     },
   ];
-  const [clickedLocation, setClickedLocation] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  const handleMapClick = async (event: { latitude: number; longitude: number }) => {
-    setClickedLocation({
-      latitude: event.latitude,
-      longitude: event.longitude,
-    });
-    setComments(await getComments('6VFaoWXfv2m2aHDasMrY'));
-    setModalVisible(true); 
-  };
-
   useEffect(() => {
     if (navigation.getState().routes.length > 1) {
       navigation.dispatch(
@@ -79,6 +92,21 @@ function Main_map({navigation}: Props): React.JSX.Element {
       );
     }
   }, []);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const data = await getPosts();
+        setPosts(data);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  console.log(posts);
 
   return (
     <View style={{flex: 1}}>
@@ -103,56 +131,68 @@ function Main_map({navigation}: Props): React.JSX.Element {
         initialRegion={{
           ...initialLocation,
         }}
-        onTapMap={(event) => {
-          // 터치 이벤트로 좌표 가져오기
-          const latitude = event.latitude;
-          const longitude = event.longitude;
-          handleMapClick({ latitude, longitude });
-        }}
-      />
-      {markers.map((marker, index) => (
-        <NaverMapMarkerOverlay
-          key={index}
-          latitude={marker.latitude}
-          longitude={marker.longitude}
-          width={50}
-          height={50}
-          caption={{
-            text: marker.title,
-          }}
-          image={{httpUri: 'https://ifh.cc/g/3cLLQa.jpg'}}
-        />
-      ))}
-      <Modal
-        visible={modalVisible}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setModalVisible(false)} // 뒤로가기 시 모달 닫기
       >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Clicked Location</Text>
-            {clickedLocation && (
-              <>
-                <Text style={styles.modalText}>
-                  Latitude: {clickedLocation.latitude.toFixed(6)}
-                </Text>
-                <Text style={styles.modalText}>
-                  Longitude: {clickedLocation.longitude.toFixed(6)}
-                </Text>
-                <Text style={styles.modalText}>
-                {comments.length > 0 ? comments.map((comment, index) => 
-                  `- ${comment.author}: ${comment.text} (${new Date(comment.timestamp).toLocaleString()})\n`).join('')
-                  : 'No comments available.'}
-                </Text>
-              </>
-            )}
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
-              <Text style={styles.closeButton}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+        {posts.map((marker, index) => {
+          console.log(marker.location);
+          return (
+            <NaverMapMarkerOverlay
+              key={index}
+              latitude={marker.location.latitude}
+              longitude={marker.location.longitude}
+              width={50}
+              height={50}
+              caption={{
+                text: marker.title,
+                textSize: 13,
+                color: '#000',
+              }}
+              image={require('../components/Location.png')}
+            />
+          )
+        })}
+      </NaverMapView>
+      <View style={styles.bottomBar}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('CommunitySearch')}
+          style={styles.bottomButton}
+        >
+          <Image
+            source={require('../components/Search.jpg')}
+            style={styles.bottom_setting}
+          />
+          <Text style={styles.bottomText}>검색</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Community')}
+          style={styles.bottomButton}
+        >
+          <Image
+            source={require('../components/MapMarker.jpg')}
+            style={styles.bottom_setting}
+          />
+          <Text style={styles.bottomText}>커뮤니티</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Write')}
+          style={styles.bottomButton}
+        >
+          <Image
+            source={require('../components/Pencil.jpg')}
+            style={styles.bottom_setting}
+          />
+          <Text style={styles.bottomText}>글쓰기</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.bottomButton}
+          onPress={() => navigation.navigate('Setting')}
+        >
+          <Image
+            source={require('../components/Setting.png')}
+            style={styles.bottom_setting}
+          />
+          <Text style={styles.bottomText}>내 정보</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -172,6 +212,11 @@ const styles = StyleSheet.create({
     height: 20,
     resizeMode: 'contain',
   },
+  bottom_setting: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+  },
   sectionTitle: {
     fontSize: 24,
     fontWeight: '600',
@@ -184,38 +229,22 @@ const styles = StyleSheet.create({
   highlight: {
     fontWeight: '700',
   },
-  container: {
-    flex: 1,
-  },
-  map: {
-    flex: 1,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
+  bottomBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // 반투명 배경
+    height: 100,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
   },
-  modalContent: {
-    width: '80%',
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
+  bottomButton: {
+    flex: 1,
     alignItems: 'center',
   },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  modalText: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  closeButton: {
-    fontSize: 16,
-    color: 'blue',
-    marginTop: 20,
+  bottomText: {
+    fontSize: 14,
+    color: '#333',
   },
 });
 
