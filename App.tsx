@@ -4,7 +4,8 @@
  *
  * @format
  */
-
+import 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {NaverMapView} from '@mj-studio/react-native-naver-map';
 import React, {useState, useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
@@ -124,50 +125,52 @@ function App(): React.JSX.Element {
   //************************************************************/ //
 
   return (
-    <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Landing"
-          options={{headerShown: false}}
-          component={Login}
-        />
-        <Stack.Screen
-          name="Main"
-          options={{headerShown: false}}
-          children={({navigation}) => <Main_map navigation={navigation} />}
-        />
-        <Stack.Screen
-          name="SignUp"
-          options={{headerShown: false}}
-          component={SignUp}
-        />
-        <Stack.Screen
-          name="Setting"
-          options={{headerShown: false}}
-          component={Setting}
-        />
-        <Stack.Screen
-          name="Community"
-          options={{headerShown: false}}
-          component={Community}
-        />
-        <Stack.Screen
-          name="Write"
-          options={{headerShown: false}}
-          component={Write}
-        />
-        <Stack.Screen
-          name="Post"
-          options={{headerShown: false}}
-          component={Post}
-        />
-        <Stack.Screen
-          name="CommunitySearch"
-          options={{headerShown: false}}
-          component={CommunitySearch}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NavigationContainer ref={navigationRef}>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Landing"
+            options={{headerShown: false}}
+            component={Login}
+          />
+          <Stack.Screen
+            name="Main"
+            options={{headerShown: false}}
+            children={({navigation}) => <Main_map navigation={navigation} />}
+          />
+          <Stack.Screen
+            name="SignUp"
+            options={{headerShown: false}}
+            component={SignUp}
+          />
+          <Stack.Screen
+            name="Setting"
+            options={{headerShown: false}}
+            component={Setting}
+          />
+          <Stack.Screen
+            name="Community"
+            options={{headerShown: false}}
+            component={Community}
+          />
+          <Stack.Screen
+            name="Write"
+            options={{headerShown: false}}
+            component={Write}
+          />
+          <Stack.Screen
+            name="Post"
+            options={{headerShown: false}}
+            component={Post}
+          />
+          <Stack.Screen
+            name="CommunitySearch"
+            options={{headerShown: false}}
+            component={CommunitySearch}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+      </GestureHandlerRootView>
   );
 }
 
