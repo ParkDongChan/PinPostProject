@@ -285,5 +285,6 @@ export const getPosts = async (): Promise<Post[]> => {
       } as Post;
     }),
   );
+  posts.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   return posts;
 };
