@@ -32,7 +32,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import {CommonActions} from '@react-navigation/native';
+import {CommonActions, useFocusEffect} from '@react-navigation/native';
 import {Post, Comment, getComments, getPosts, uploadComment, uploadPost} from '../backend';
 import db from '@react-native-firebase/firestore';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
@@ -98,18 +98,24 @@ function Main_map({navigation}: Props): React.JSX.Element {
     }
   }, []);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const data = await getPosts();
-        setPosts(data);
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-      }
-    };
+  const fetchPosts = async () => {
+    try {
+      const data = await getPosts();
+      setPosts(data);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchPosts();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchPosts();
+    }, [])
+  );
 
 
   const handleMarkerPress = async (marker: Post) => {

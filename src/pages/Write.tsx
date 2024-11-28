@@ -100,12 +100,8 @@ function Write({navigation}: Props) {
   const [matchingLocations, setMatchingLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
 
-const buildingRanges = [
-    { label: 'Building A', value: 'Building A', minLat: 37.421, maxLat: 37.422, minLng: -122.085, maxLng: -122.083 },
-    { label: 'Building B', value: 'Building B', minLat: 37.426, maxLat: 37.427, minLng: -122.082, maxLng: -122.080 },
-    { label: 'Building C', value: 'Building C', minLat: 37.429, maxLat: 37.430, minLng: -122.081, maxLng: -122.079 },
-    { label: 'Building D', value: 'Building D', minLat: 37.433, maxLat: 37.434, minLng: -122.078, maxLng: -122.076 },
-    { label: 'Building E', value: 'Building E', minLat: 37.420, maxLat: 37.421, minLng: -122.089, maxLng: -122.087 }
+  const buildingRanges = [
+    { label: '제 1공학관', value: 'Building A', minLat: 37.292695, maxLat: 37.292695, minLng: 126.976759, maxLng: 126.976759 }
   ];
 
 
@@ -328,34 +324,20 @@ const buildingRanges = [
         />
       </View>
       <Dialog.Container visible={dialogVisible}>
-        <Dialog.Title>Enter Coordinates</Dialog.Title>
-        <Dialog.Input
-          placeholder="Latitude"
-          keyboardType="numeric"
-          value={tempLatitude}
-          onChangeText={handleLatitudeChange}
-        />
-        <Dialog.Input
-          placeholder="Longitude"
-          keyboardType="numeric"
-          value={tempLongitude}
-          onChangeText={handleLongitudeChange}
-        />
+        <Dialog.Title>위치 선택</Dialog.Title>
+        {buildingRanges.map((building, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => {
+              setLatitude((building.minLat + building.maxLat) / 2);
+              setLongitude((building.minLng + building.maxLng) / 2);
+              setDialogVisible(false);
+            }}
+          >
+        <Text>{building.label}</Text>
+          </TouchableOpacity>
+        ))}
         <Dialog.Button label="Cancel" onPress={() => setDialogVisible(false)} />
-        <Dialog.Button label="Confirm" onPress={handleDialogConfirm} />
-        {matchingLocations.length > 0 && (
-            <View style={{ marginTop: 20 }}>
-              <Text>Recommended Locations:</Text>
-              {matchingLocations.map((location, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => handleBuildingSelection(location)}
-                >
-                  <Text>{location.label}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-        )}
       </Dialog.Container>
     </View>
   );

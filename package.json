@@ -28,6 +28,7 @@
     "expo-checkbox": "^4.0.0",
     "react": "18.3.1",
     "react-native": "^0.75.4",
+    "react-native-dialog": "^9.3.0",
     "react-native-geolocation-service": "^5.3.1",
     "react-native-gesture-handler": "^2.21.2",
     "react-native-permissions": "^4.1.5",
