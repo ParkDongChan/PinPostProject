@@ -101,7 +101,16 @@ function Write({navigation}: Props) {
   const [selectedLocation, setSelectedLocation] = useState(null);
 
   const buildingRanges = [
-    { label: '제 1공학관', value: 'Building A', minLat: 37.292695, maxLat: 37.292695, minLng: 126.976759, maxLng: 126.976759 }
+    { label: '제 1공학관', value: 'Building A', minLat: 37.29432, maxLat: 37.29432, minLng: 126.9767, maxLng: 126.9767 },
+    { label: '제 2공학관', value: 'Building B', minLat: 37.2955185, maxLat: 37.2955185, minLng: 126.9768856, maxLng: 126.976885 },
+    { label: '삼성학술 정보관', value: 'Building C', minLat: 37.2940342, maxLat: 37.2940342, minLng: 126.9749593, maxLng: 126.9749593 },
+    { label: '학생회관', value: 'Building D', minLat: 37.2942421, maxLat: 37.2942421, minLng: 126.9735993, maxLng: 126.9735993 },
+    { label: 'N센터', value: 'Building E', minLat: 37.2916178, maxLat: 37.2916178, minLng: 126.9756831, maxLng: 126.9756831 },
+    { label: '주차장', value: 'Building F', minLat: 37.292695, maxLat: 37.292695, minLng: 126.976759, maxLng: 126.976759 },
+    { label: '약학대학', value: 'Building G', minLat: 37.29206, maxLat: 37.29206, minLng: 126.9767, maxLng: 126.9767 },
+    { label: '반도체관', value: 'Building H', minLat: 37.29161, maxLat: 37.29161, minLng: 126.9777, maxLng: 126.9777 },
+    { label: '체육관', value: 'Building I', minLat: 37.29240, maxLat: 37.29240, minLng: 126.9705, maxLng: 126.9705 },
+    { label: '대운동장', value: 'Building J', minLat: 37.29505, maxLat: 37.29505, minLng: 126.9709, maxLng: 126.9709 }
   ];
 
 
