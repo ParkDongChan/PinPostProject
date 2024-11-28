@@ -20,6 +20,7 @@ import {
 import {getComments, getPosts, uploadComment, uploadPost} from '../backend';
 import { PermissionsAndroid } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
+import Dialog from 'react-native-dialog';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
@@ -93,6 +94,20 @@ function Write({navigation}: Props) {
   const [body, setBody] = useState('');
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [tempLatitude, setTempLatitude] = useState('');
+  const [tempLongitude, setTempLongitude] = useState('');
+  const [matchingLocations, setMatchingLocations] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
+const buildingRanges = [
+    { label: 'Building A', value: 'Building A', minLat: 37.421, maxLat: 37.422, minLng: -122.085, maxLng: -122.083 },
+    { label: 'Building B', value: 'Building B', minLat: 37.426, maxLat: 37.427, minLng: -122.082, maxLng: -122.080 },
+    { label: 'Building C', value: 'Building C', minLat: 37.429, maxLat: 37.430, minLng: -122.081, maxLng: -122.079 },
+    { label: 'Building D', value: 'Building D', minLat: 37.433, maxLat: 37.434, minLng: -122.078, maxLng: -122.076 },
+    { label: 'Building E', value: 'Building E', minLat: 37.420, maxLat: 37.421, minLng: -122.089, maxLng: -122.087 }
+  ];
+
 
   const requestLocationPermission = async () => {
     try {
@@ -145,6 +160,85 @@ function Write({navigation}: Props) {
       Alert.alert('위치 오류', '위치를 가져오는 데 실패했습니다.');
     }
   };
+
+  const handleLatitudeChange = (lat) => {
+    setTempLatitude(lat);
+  };
+
+  const handleLongitudeChange = (lng) => {
+    setTempLongitude(lng);
+  };
+
+  const handleDialogConfirm = () => {
+    const numericLat = parseFloat(tempLatitude);
+    const numericLng = parseFloat(tempLongitude);
+
+    if (isNaN(numericLat) || isNaN(numericLng)) {
+      Alert.alert('Invalid Input', 'Please enter valid latitude and longitude.');
+      return;
+    }
+
+    // Find exact matches
+    const exactMatches = buildingRanges.filter((building) => {
+      return (
+        numericLat >= building.minLat && numericLat <= building.maxLat &&
+        numericLng >= building.minLng && numericLng <= building.maxLng
+      );
+    });
+
+    // If there are exact matches, show them
+    if (exactMatches.length > 0) {
+      setMatchingLocations(exactMatches);
+    } else {
+      // If no exact matches, find the closest locations
+      const closestMatches = findClosestLocations(numericLat, numericLng);
+
+      // Combine exact matches and closest matches
+      const combinedMatches = [...exactMatches, ...closestMatches];
+
+      // Show top 3 matches (exact matches first)
+      setMatchingLocations(combinedMatches.slice(0, 3));
+    }
+
+    //setDialogVisible(false);
+  };
+
+  const findClosestLocations = (lat, lng) => {
+    // Sort by distance to the given coordinates
+    const locationsWithDistance = buildingRanges.map((building) => {
+      const distance = calculateDistance(lat, lng, (building.minLat + building.maxLat) / 2, (building.minLng + building.maxLng) / 2);
+      return { ...building, distance };
+    });
+
+    // Sort locations by distance (ascending)
+    locationsWithDistance.sort((a, b) => a.distance - b.distance);
+
+    // Return the closest 3 locations (or fewer if less than 3)
+    return locationsWithDistance.slice(0, 3);
+  };
+
+  // Function to calculate distance between two points (in km)
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Radius of the Earth in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in km
+  };
+
+  const handleOtherLocation = () => {
+    setDialogVisible(true);  // Open the dialog to manually enter coordinates
+  };
+
+   const handleBuildingSelection = (building) => {
+      setSelectedBuilding(building);
+      setDialogVisible(false);
+    };
+
 
   const handlePostSubmit = async () => {
     try {
@@ -214,6 +308,7 @@ function Write({navigation}: Props) {
         }}
       >
         <Button title="현재 위치" onPress={getCurrentLocation} />
+        <Button title="다른 위치" onPress={handleOtherLocation} />
       </View>
       <View style={styles.inputContainer}>
         <TextInput
@@ -232,6 +327,36 @@ function Write({navigation}: Props) {
           multiline
         />
       </View>
+      <Dialog.Container visible={dialogVisible}>
+        <Dialog.Title>Enter Coordinates</Dialog.Title>
+        <Dialog.Input
+          placeholder="Latitude"
+          keyboardType="numeric"
+          value={tempLatitude}
+          onChangeText={handleLatitudeChange}
+        />
+        <Dialog.Input
+          placeholder="Longitude"
+          keyboardType="numeric"
+          value={tempLongitude}
+          onChangeText={handleLongitudeChange}
+        />
+        <Dialog.Button label="Cancel" onPress={() => setDialogVisible(false)} />
+        <Dialog.Button label="Confirm" onPress={handleDialogConfirm} />
+        {matchingLocations.length > 0 && (
+            <View style={{ marginTop: 20 }}>
+              <Text>Recommended Locations:</Text>
+              {matchingLocations.map((location, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => handleBuildingSelection(location)}
+                >
+                  <Text>{location.label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+        )}
+      </Dialog.Container>
     </View>
   );
 }
