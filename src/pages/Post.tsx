@@ -23,6 +23,32 @@ import Checkbox from 'expo-checkbox';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
+export interface UserData {
+  name: string;
+  email: string;
+  nickname: string;
+}
+
+export interface Comment {
+  author: string;
+  text: string;
+  timestamp: Date;
+}
+
+export interface Post {
+  author: UserData;
+  id: string;
+  title: string;
+  body: string;
+  photoUrl: string;
+  likedUsers: string[];
+  likes: number;
+  building_id: number;
+  timestamp: Date;
+  location: GeoPoint;
+  comments: Comment[];
+}
+
 const styles = StyleSheet.create({
   loginContainer: {
     flex: 1,
@@ -129,7 +155,7 @@ const styles = StyleSheet.create({
 function Post({ navigation, route }: { navigation: any; route: any }) {
   const { post } = route.params;
 
-  const [onePost, setOnePost] = useState();
+  const [onePost, setOnePost] = useState<Post>();
   const [comment, setComment] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
 
@@ -318,6 +344,38 @@ function Post({ navigation, route }: { navigation: any; route: any }) {
             width: '100%',
           }}
         />
+        <ScrollView contentContainerStyle={{paddingRight: 5}}>
+        {onePost && onePost?.comments?.map((comment, index) => (
+          <View
+            key={index}
+            style={{
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              marginVertical: 10,
+              paddingTop: 15,
+              gap: 10,
+          }}>
+            <Text
+              style={{
+                fontSize: 16,
+                textAlign: 'left',
+                fontWeight: 'bold',
+                flexShrink: 1,
+                color: '#000000',
+              }}
+            >
+              {comment.text}
+            </Text>
+            <View
+              style={{
+                height: 1,
+                backgroundColor: '#B0AFAF',
+                width: '100%',
+              }}
+            />
+          </View>
+        ))}
+        </ScrollView>
         <View style={styles.commentInputContainer}>
           <View style={styles.checkboxContainer}>
             <Checkbox
