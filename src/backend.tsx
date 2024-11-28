@@ -36,6 +36,7 @@ export interface Post {
   building_id: number;
   timestamp: Date;
   location: GeoPoint;
+  comments: Comment[];
 }
 
 export const isNewUser = async (uid: string): Promise<boolean> => {
@@ -184,7 +185,6 @@ export const uploadComment = async (
       .update({
         comments: db.FieldValue.arrayUnion(comment),
       });
-
     return Promise.resolve(1); // 성공 시 1 반환
   } catch (error) {
     console.error('Error uploading comment:', error);
@@ -279,6 +279,7 @@ export const getPosts = async (): Promise<Post[]> => {
       const {comments, ...data} = doc.data();
       return {
         ...data,
+        comments: comments || [],
         author: await getUserData(doc.data().author),
         id: doc.id,
         timestamp: doc.data().timestamp.toDate(),

@@ -15,9 +15,11 @@ import {
   TouchableOpacity,
   useColorScheme,
   View,
+  CheckBox,
 } from 'react-native';
 import {getComments, getPosts, uploadComment, uploadPost} from '../backend';
 import { useFocusEffect } from '@react-navigation/native';
+import Checkbox from 'expo-checkbox';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
@@ -87,12 +89,49 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 10,
   },
+  commentInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  commentInput: {
+    flex: 1,
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+  },
+  commentButton: {
+    marginLeft: 10,
+    backgroundColor: '#7AE270',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+  },
+  commentButtonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  checkbox: {
+    marginRight: 5,
+  },
+  checkboxLabel: {
+    fontSize: 16,
+  },
 });
 
 function Post({ navigation, route }: { navigation: any; route: any }) {
   const { post } = route.params;
 
   const [onePost, setOnePost] = useState();
+  const [comment, setComment] = useState('');
+  const [isAnonymous, setIsAnonymous] = useState(false);
 
   const fetchPosts = async () => {
     try {
@@ -104,7 +143,6 @@ function Post({ navigation, route }: { navigation: any; route: any }) {
     }
   };
 
-
   const likePost = async () => {
     try {
       const postRef = db().collection('posts').doc(post.id);
@@ -114,6 +152,17 @@ function Post({ navigation, route }: { navigation: any; route: any }) {
       fetchPosts();
     } catch (error) {
       console.error("Error liking post: ", error);
+    }
+  };
+
+  const handleCommentSubmit = async () => {
+    if (comment.trim() === '') return;
+    try {
+      await uploadComment(post.id, comment, isAnonymous);
+      setComment('');
+      fetchPosts();
+    } catch (error) {
+      console.error('Error uploading comment:', error);
     }
   };
 
@@ -269,6 +318,25 @@ function Post({ navigation, route }: { navigation: any; route: any }) {
             width: '100%',
           }}
         />
+        <View style={styles.commentInputContainer}>
+          <View style={styles.checkboxContainer}>
+            <Checkbox
+              value={isAnonymous}
+              onValueChange={setIsAnonymous}
+              style={styles.checkbox}
+            />
+            <Text style={styles.checkboxLabel}>익명</Text>
+          </View>
+          <TextInput
+            style={styles.commentInput}
+            value={comment}
+            onChangeText={setComment}
+            placeholder="댓글을 입력하세요"
+          />
+          <TouchableOpacity style={styles.commentButton} onPress={handleCommentSubmit}>
+            <Text style={styles.commentButtonText}>댓글 달기</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );

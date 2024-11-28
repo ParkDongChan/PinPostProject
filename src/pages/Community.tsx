@@ -103,6 +103,8 @@ function Community({navigation}: Props) {
     }, [])
   );
 
+  console.log(posts);
+
   return (
     <View style={styles.loginContainer}>
       <TouchableOpacity
@@ -205,7 +207,7 @@ function Community({navigation}: Props) {
                     height: 20,
                   }}
                 />
-                 <Text style={{color: "#0021F5"}}>{post.comments?.length || 0}</Text>
+                 <Text style={{color: "#0021F5"}}>{post.comments.length || 0}</Text>
               </View>
             </View>
             <View
