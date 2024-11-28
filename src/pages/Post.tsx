@@ -91,7 +91,36 @@ const styles = StyleSheet.create({
 
 function Post({ navigation, route }: { navigation: any; route: any }) {
   const { post } = route.params;
-  console.log(post);
+
+  const [onePost, setOnePost] = useState();
+
+  const fetchPosts = async () => {
+    try {
+      const data = await getPosts();
+      const now_data = data.find((p: any) => p.id === post.id);
+      setOnePost(now_data);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+  };
+
+
+  const likePost = async () => {
+    try {
+      const postRef = db().collection('posts').doc(post.id);
+      await postRef.update({
+        likes: db.FieldValue.increment(1),
+      });
+      fetchPosts();
+    } catch (error) {
+      console.error("Error liking post: ", error);
+    }
+  };
+
+  useEffect(() => {
+    setOnePost(post);
+  }, []);
+
   return (
     <View style={styles.loginContainer}>
       <TouchableOpacity
@@ -133,7 +162,7 @@ function Post({ navigation, route }: { navigation: any; route: any }) {
                 color: '#000000',
               }}
             >
-              {post.author.nickname}
+              {onePost?.author?.nickname}
             </Text>
             <Text
               style={{
@@ -143,8 +172,8 @@ function Post({ navigation, route }: { navigation: any; route: any }) {
                 color: '#000000',
               }}
             >
-              {post.timestamp
-                ? new Date(post.timestamp).toLocaleString('en-GB', {
+              {onePost?.timestamp
+                ? new Date(onePost?.timestamp).toLocaleString('en-GB', {
                     year: 'numeric',
                     month: '2-digit',
                     day: '2-digit',
@@ -174,7 +203,7 @@ function Post({ navigation, route }: { navigation: any; route: any }) {
               color: '#000000',
             }}
           >
-            {post.title}
+            {onePost?.title}
           </Text>
           <Text
             style={{
@@ -184,7 +213,7 @@ function Post({ navigation, route }: { navigation: any; route: any }) {
               color: '#000000',
             }}
           >
-            {post.body}
+            {onePost?.body}
           </Text>
         </View>
         <View
@@ -200,7 +229,8 @@ function Post({ navigation, route }: { navigation: any; route: any }) {
               gap: 10,
             }}
           >
-            <View
+            <TouchableOpacity
+              onPress={likePost}
               style={{
                 flexDirection: 'row',
                 gap: 5,
@@ -213,8 +243,8 @@ function Post({ navigation, route }: { navigation: any; route: any }) {
                   height: 20,
                 }}
               />
-              <Text style={{color: "#FF0000"}}>{post.likes}</Text>
-            </View>
+              <Text style={{color: "#FF0000"}}>{onePost?.likes}</Text>
+            </TouchableOpacity>
             <View
               style={{
                 flexDirection: 'row',
@@ -228,7 +258,7 @@ function Post({ navigation, route }: { navigation: any; route: any }) {
                   height: 20,
                 }}
               />
-               <Text style={{color: "#0021F5"}}>{post.comments?.length || 0}</Text>
+               <Text style={{color: "#0021F5"}}>{onePost?.comments?.length || 0}</Text>
             </View>
           </View>
         </View>
