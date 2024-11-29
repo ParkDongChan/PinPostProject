@@ -16,6 +16,7 @@ import {
   useColorScheme,
   View,
   CheckBox,
+  FlatList,
 } from 'react-native';
 import {getComments, getPosts, uploadComment, uploadPost} from '../backend';
 import { useFocusEffect } from '@react-navigation/native';
@@ -150,12 +151,40 @@ const styles = StyleSheet.create({
   checkboxLabel: {
     fontSize: 16,
   },
+  commentItem: {
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  commentHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  commentAuthor: {
+    fontWeight: '600',
+    marginRight: 8,
+  },
+  commentDate: {
+    fontSize: 12,
+    color: '#888',
+  },
+  commentText: {
+    marginTop: 4,
+  },
+  commentUserIcon: {
+    width: 24,
+    height: 24,
+    marginRight: 8,
+  },
 });
 
 function Post({ navigation, route }: { navigation: any; route: any }) {
   const { post } = route.params;
 
   const [onePost, setOnePost] = useState<Post>();
+  const [oneComment, setOneComment] = useState<Comment[]>([]);
   const [comment, setComment] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
 
@@ -195,6 +224,25 @@ function Post({ navigation, route }: { navigation: any; route: any }) {
   useEffect(() => {
     setOnePost(post);
   }, []);
+
+  useEffect(() => {
+    if (onePost) {
+      const fetchComments = async () => {
+        try {
+          const data = await getComments(onePost.id);
+          const formattedComments = data.map((comment) => ({
+            ...comment,
+            timestamp: comment.timestamp,
+          }));
+          setOneComment(formattedComments);
+        } catch (error) {
+          console.error('Error fetching comments:', error);
+        }
+      };
+
+      fetchComments();
+    }
+  }, [onePost]);
 
   return (
     <View style={styles.loginContainer}>
@@ -344,38 +392,26 @@ function Post({ navigation, route }: { navigation: any; route: any }) {
             width: '100%',
           }}
         />
-        <ScrollView contentContainerStyle={{paddingRight: 5}}>
-        {onePost && onePost?.comments?.map((comment, index) => (
-          <View
-            key={index}
-            style={{
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              marginVertical: 10,
-              paddingTop: 15,
-              gap: 10,
-          }}>
-            <Text
-              style={{
-                fontSize: 16,
-                textAlign: 'left',
-                fontWeight: 'bold',
-                flexShrink: 1,
-                color: '#000000',
-              }}
-            >
-              {comment.text}
-            </Text>
-            <View
-              style={{
-                height: 1,
-                backgroundColor: '#B0AFAF',
-                width: '100%',
-              }}
-            />
-          </View>
-        ))}
-        </ScrollView>
+        <FlatList
+          data={oneComment || []}
+          keyExtractor={(item, idx) => idx.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.commentItem}>
+              <View style={styles.commentHeader}>
+                <View style={{ flexDirection: 'row'}}>
+                  <Image source={require('../components/Anonymous.png')} style={styles.commentUserIcon} />
+                  <Text style={styles.commentAuthor}>{item.author}</Text>
+                </View>
+                <Text style={styles.commentDate}>
+                  {item.timestamp instanceof db.Timestamp
+                    ? item.timestamp.toDate().toLocaleString()
+                    : new Date(item.timestamp).toLocaleString()}
+                </Text>
+              </View>
+              <Text style={styles.commentText}>{item.text}</Text>
+            </View>
+          )}
+        />
         <View style={styles.commentInputContainer}>
           <View style={styles.checkboxContainer}>
             <Checkbox
