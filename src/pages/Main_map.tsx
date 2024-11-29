@@ -154,14 +154,6 @@ function Main_map({navigation}: Props): React.JSX.Element {
             style={styles.back_logo}
           />
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Setting')}
-          style={{position: 'absolute', top: 20, left: 80, zIndex: 1}}>
-          <Image
-            source={require('../components/Setting.png')}
-            style={styles.setting}
-          />
-        </TouchableOpacity>
         <NaverMapView
           style={{flex: 1}}
           initialRegion={{

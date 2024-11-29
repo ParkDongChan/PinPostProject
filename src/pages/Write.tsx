@@ -149,7 +149,7 @@ function Write({navigation}: Props) {
           setLongitude(transformLongitude);
           Alert.alert(
             '현재 위치',
-            `위도: ${transformLatitude}, 경도: ${transformLongitude}`
+            `위도: ${transformLatitude}, 경도: ${transformLongitude} 설정되었습니다.`
           );
         },
         (error) => {

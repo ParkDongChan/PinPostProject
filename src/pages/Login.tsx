@@ -88,18 +88,13 @@ function Login({navigation}: Props) {
           GoogleLogin(navigation);
         }}
       />
+      {/*
       <View style={stylesLogin.authOptionsContainer}>
         <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-          <Text>회원가입 </Text>
-        </TouchableOpacity>
-        <Text>/</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Main')}>
-          <Text> 비밀번호 찾기</Text>
+          <Text>회원가입하기</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={() => navigation.navigate('Main')}>
-        <Text>클릭 테스트 (네이버 맵으로 이동)</Text>
-      </TouchableOpacity>
+      */}
     </View>
   );
 }

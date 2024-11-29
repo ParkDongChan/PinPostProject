@@ -160,6 +160,7 @@ function Setting({navigation}: Props) {
             {email}
           </Text>
         </View>
+        {/*
         <View
           style={{
             flexDirection: 'row',
@@ -180,6 +181,7 @@ function Setting({navigation}: Props) {
           }}>
           <Text style={{fontSize: 16}}>탈퇴</Text>
         </View>
+        */}
       </View>
       <View
         style={{
@@ -189,6 +191,7 @@ function Setting({navigation}: Props) {
           marginTop: 25,
         }}
       />
+      {/*
       <View style={{marginTop: 20}}>
         <Text style={{fontSize: 18, fontWeight: 'bold'}}>환경 설정</Text>
         <View
@@ -212,6 +215,7 @@ function Setting({navigation}: Props) {
           <Text style={{fontSize: 16}}>신고</Text>
         </View>
       </View>
+      */}
       <View
         style={{
           width: '100%',
