@@ -5,7 +5,7 @@
  * @format
  */
 import 'react-native-gesture-handler';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {NaverMapView} from '@mj-studio/react-native-naver-map';
 import React, {useState, useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
@@ -44,6 +44,9 @@ import Community from './src/pages/Community';
 import Write from './src/pages/Write';
 import Post from './src/pages/Post';
 import CommunitySearch from './src/pages/CommunitySearch';
+import {LogBox} from 'react-native';
+
+LogBox.ignoreAllLogs(true);
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -57,7 +60,7 @@ type NavParamList = {
   Community: undefined;
   Write: undefined;
   Post: undefined;
-  CommunitySearch: undefined
+  CommunitySearch: undefined;
 };
 
 function Section({children, title}: SectionProps): React.JSX.Element {
@@ -125,7 +128,7 @@ function App(): React.JSX.Element {
   //************************************************************/ //
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{flex: 1}}>
       <NavigationContainer ref={navigationRef}>
         <Stack.Navigator>
           <Stack.Screen
@@ -170,7 +173,7 @@ function App(): React.JSX.Element {
           />
         </Stack.Navigator>
       </NavigationContainer>
-      </GestureHandlerRootView>
+    </GestureHandlerRootView>
   );
 }
 
