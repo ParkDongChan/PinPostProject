@@ -34,7 +34,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import {CommonActions, useFocusEffect} from '@react-navigation/native';
 import {Post, Comment, getComments, getPosts, uploadComment, uploadPost} from '../backend';
-import db from '@react-native-firebase/firestore';
+import db, { onSnapshot } from '@react-native-firebase/firestore';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -118,20 +118,29 @@ function Main_map({navigation}: Props): React.JSX.Element {
   );
 
 
-  const handleMarkerPress = async (marker: Post) => {
-    setSelectedPost(marker);
-    bottomSheetRef.current?.snapToIndex(1);
-    try {
-      const data = await getComments(marker.id);
-      const formattedComments = data.map((comment) => ({
-        ...comment,
-        timestamp: comment.timestamp,
-      }));
-      setComments(formattedComments);
-      console.log(comments);
-    } catch (error) {
-      console.error('Error fetching comments:', error);
+  useEffect(() => {
+    if (selectedPost) {
+      const fetchComments = async () => {
+        try {
+          bottomSheetRef.current?.snapToPosition('38%');
+          console.log(bottomSheetRef.current);
+          const data = await getComments(selectedPost.id);
+          const formattedComments = data.map((comment) => ({
+            ...comment,
+            timestamp: comment.timestamp,
+          }));
+          setComments(formattedComments);
+        } catch (error) {
+          console.error('Error fetching comments:', error);
+        }
+      };
+
+      fetchComments();
     }
+  }, [selectedPost]);
+
+  const handleMarkerPress = (marker: Post) => {
+    setSelectedPost(marker);
   };
 
   return (
@@ -181,12 +190,10 @@ function Main_map({navigation}: Props): React.JSX.Element {
 
         <BottomSheet
           ref={bottomSheetRef}
-          index={-1}
-          snapPoints={['25%', '50%', '90%']}
           style={styles.bottomSheet}
         >
           {selectedPost ? (
-            <View style={styles.selectedPostContainer}>
+            <BottomSheetView style={styles.selectedPostContainer}>
               <View style={styles.postHeader}>
                 <Image source={require('../components/Anonymous.png')} style={styles.userIcon} />
                 <View style={styles.postHeaderText}>
@@ -198,11 +205,9 @@ function Main_map({navigation}: Props): React.JSX.Element {
               <Text style={styles.selectedPostBody}>{selectedPost.body}</Text>
               <View style={styles.postReactions}>
                 <Image source={require('../components/Thumbs_Up.png')} style={styles.postReactionIcon} />
-                <Text style={styles.likeCount}>
-                  {selectedPost.likes}</Text>
+                <Text style={styles.likeCount}>{selectedPost.likes}</Text>
                 <Image source={require('../components/Comment.png')} style={styles.postReactionIcon} />
-                <Text style={styles.commentCount}>
-                  {comments.length}</Text>
+                <Text style={styles.commentCount}>{comments.length}</Text>
               </View>
               <FlatList
                 data={comments}
@@ -218,7 +223,7 @@ function Main_map({navigation}: Props): React.JSX.Element {
                   </View>
                 )}
               />
-            </View>
+            </BottomSheetView>
           ) : (
             <Text style={styles.noPostSelectedText}>마커를 눌러 게시글을 확인하세요</Text>
           )}
