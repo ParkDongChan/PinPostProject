@@ -12,10 +12,15 @@ TEAM2 (Introduction to Software Engineering / SWE3002_42 / 2024F)
 
 ## 👥 Team Members  
 
-- **Team Leader**: 정민재(@mjayJeong)
-- **Frontend Developers**: 김준섭(@joonseop), 박동찬(@ParkDongChan), 샤히라(@syahirah1203)
-- **Backend Developers**: 김우주(@w0uldy0u), 백지윤(@jiyooniboon), 이호준(@orcies8147)  
-
+- **Team Leader**: 정민재 ([mjayJeong](https://github.com/mjayJeong))
+- **Frontend Developers**: 
+  - 김준섭 ([joonseop](https://github.com/joonseop))
+  - 박동찬 ([ParkDongChan](https://github.com/ParkDongChan))
+  - 샤히라 ([syahirah1203](https://github.com/syahirah1203))
+- **Backend Developers**: 
+  - 김우주 ([w0uldy0u](https://github.com/w0uldy0u))
+  - 백지윤 ([jiyooniboon](https://github.com/jiyooniboon))
+  - 이호준 ([orcies8147](https://github.com/orcies8147))
 ---
 
 ## 🗓️ Development Period
