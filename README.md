@@ -12,9 +12,9 @@ TEAM2 (Introduction to Software Engineering / SWE3002_42 / 2024F)
 
 ## 👥 Team Members  
 
-- **Team Leader**: 정민재  
-- **Frontend Developers**: 김준섭, 박동찬, 샤히라  
-- **Backend Developers**: 김우주, 백지윤, 이호준  
+- **Team Leader**: 정민재(@mjayJeong)
+- **Frontend Developers**: 김준섭(@joonseop), 박동찬(@ParkDongChan), 샤히라(@syahirah1203)
+- **Backend Developers**: 김우주(@w0uldy0u), 백지윤(@jiyooniboon), 이호준(@orcies8147)  
 
 ---
 
