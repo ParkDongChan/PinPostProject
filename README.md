@@ -1,6 +1,85 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 📌 PinPost  
 
-# Getting Started
+TEAM2 (Introduction to Software Engineering / SWE3002_42 / 2024F)  
+
+---
+
+## 🛠️ Project Overview  
+
+**PinPost** is a location-based community app designed for campus communities. It allows users to discover and share updates, events, and discussions based on specific locations. The app combines intuitive user interfaces with real-time location-based services to enhance campus communication.  
+
+---
+
+## 👥 Team Members  
+
+- **Team Leader**: 정민재  
+- **Frontend Developers**: 김준섭, 박동찬, 샤히라  
+- **Backend Developers**: 김우주, 백지윤, 이호준  
+
+---
+
+## 🗓️ Development Period
+
+2024.09 ~ 2024.12 
+
+---
+
+## ✨ Features  
+
+### 1. User Authentication
+- **Login**: Simple and secure login using school email addresses (@g.skku.edu)
+- **Registration**: Easy user registration with validation for school email domains.
+
+### 2. Location-Based Posting
+- **Main Map**: View posts tied to specific locations on a campus map.
+- **Write Posts**:
+  - Posts can be tied to the user’s current GPS location.
+  - Users can also manually select a location to associate with their post.
+- **Commenting**: Comment on posts and view other users' comments.
+
+### 3. Community Interaction
+- Users can engage in conversations by liking posts or leaving comments.
+- Anonymous posting for added privacy.
+
+### 4. Real-Time Updates
+- See posts updated dynamically on the map as you zoom or swipe.
+- Easily locate nearby events or announcements.
+
+---
+
+## 🔨 Tech Stack  
+
+### Frontend  
+- ![Figma](https://img.shields.io/badge/-Figma-F24E1E?logo=figma&logoColor=white&style=flat)  
+  For designing and prototyping UI/UX.
+- ![React Native](https://img.shields.io/badge/-React%20Native-61DAFB?logo=react&logoColor=white&style=flat)  
+  Cross-platform mobile development.  
+- ![Naver Map API](https://img.shields.io/badge/-Naver%20Map%20API-03C75A?logo=naver&logoColor=white&style=flat)  
+  Provides interactive and location-based map features.  
+
+### Backend  
+- ![Firebase Authentication](https://img.shields.io/badge/-Firebase%20Authentication-FFCA28?logo=firebase&logoColor=white&style=flat)  
+  For user login and authentication.  
+- ![Firebase Realtime Database](https://img.shields.io/badge/-Firebase%20Realtime%20Database-FFCA28?logo=firebase&logoColor=white&style=flat)  
+  For real-time data storage and updates.  
+
+---
+
+## 🧰 Prerequisites  
+
+- **Node.js** (v20.15.1) and **npm** (v10.7.0)  
+- **Android Studio** with API Level 35 (Google Play)  
+- **JDK 17**  
+- **Android SDK** (v34)  
+- **Kotlin** (v1.9.24)  
+- **React** (v18.3.1)  
+- **React Native** (v0.75.4)  
+- **react-native-firebase/app** (v21.2.0)  
+- **react-native-naver-map** (v2.2.0)  
+
+---
+
+## 🚀 Getting Started
 
 >**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
@@ -45,35 +124,3 @@ yarn ios
 If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
 
 This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
