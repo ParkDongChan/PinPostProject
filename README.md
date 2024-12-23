@@ -60,7 +60,7 @@ TEAM2 (Introduction to Software Engineering / SWE3002_42 / 2024F)
 ### Backend  
 - ![Firebase Authentication](https://img.shields.io/badge/-Firebase%20Authentication-FFCA28?logo=firebase&logoColor=white&style=flat)  
   For user login and authentication.  
-- ![Firebase Realtime Database](https://img.shields.io/badge/-Firebase%20Realtime%20Database-FFCA28?logo=firebase&logoColor=white&style=flat)  
+- ![Firebase Firestore](https://img.shields.io/badge/-Firebase%20Firestore-FFCA28?logo=firebase&logoColor=white&style=flat)  
   For real-time data storage and updates.  
 
 ---
